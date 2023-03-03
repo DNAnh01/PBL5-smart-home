@@ -95,3 +95,9 @@
 
 <img src="/img_gray_conv2d_leakyrelu_maxpooling.jpg" width="" height="">
 
+## MLP
+
+<img src="/imagesMarkdown/MLP.png" width="" height="">
+
+
+
