@@ -100,4 +100,30 @@
 <img src="/imagesMarkdown/MLP.png" width="" height="">
 
 
+## MSE (Mean Squared Error) 
+
+*   Trong CNN, chúng ta có thể sử dụng Markdown để tạo ra một đoạn văn bản dễ đọc và có định dạng.
+
+*   MSE là một phương pháp đánh giá lỗi phổ biến trong mô hình CNN. Nó tính toán độ chênh lệch giữa dự đoán của mô hình và giá trị thực tế bằng cách lấy trung bình bình phương của tất cả các sai số.
+
+*Công thức của MSE là:
+
+$$
+MSE = (1/n) * Σ(y - ŷ)^2
+$$
+
+*   Trong đó:
+
+    n là số lượng các mẫu dữ liệu
+    y là giá trị thực tế
+    ŷ là giá trị được dự đoán bởi mô hình
+
+*   MSE thường được sử dụng trong bài toán hồi quy (regression) để đánh giá độ chính xác của mô hình. Nó cũng được sử dụng trong bài toán phân loại nhị phân (binary classification) khi mô hình trả về một giá trị liên tục thay vì một giá trị rời rạc.
+
+*   Đối với CNN, MSE được sử dụng để tính toán lỗi giữa đầu ra dự đoán và giá trị đầu ra thực tế của một ảnh. Sau đó, thuật toán backpropagation sẽ sử dụng lỗi này để điều chỉnh trọng số của mạng để cải thiện độ chính xác của mô hình.
+
+<img src="/imagesMarkdown/MSE.png" width="" height="">
+
+
+
 
