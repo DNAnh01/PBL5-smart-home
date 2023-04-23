@@ -5,7 +5,6 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import (camera_router, 
-                     gatehouse_router, 
                      temperature_sensor_router, 
                      humidity_sensor_router)
 
@@ -28,7 +27,6 @@ app.add_middleware(
     Routers
 '''
 app.include_router(camera_router.router)
-app.include_router(gatehouse_router.router)
 app.include_router(temperature_sensor_router.router)
 app.include_router(humidity_sensor_router.router)
 # if __name__=="__main__":
