@@ -15,7 +15,7 @@ async def create_camera(camera_create: Camera = Body(...)) -> Camera:
 async def get_camera() -> Camera:
     result = camera_service.get_camera()
     if not result:
-        raise HTTPException(status_code=404, detail="Item not found.")
+        raise HTTPException(status_code=404, detail="camera not found.")
     return result
 
 @router.put("camera/update", response_model=Camera, tags=["camera"])

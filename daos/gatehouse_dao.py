@@ -2,7 +2,7 @@ from database.connection import db
 from schemas.gatehouse_schema import GateHouse
 
 class GateHouseDao:
-    collection_name = "gatehouse"
+    collection_name = "Gatehouse"
     gatehouse_document_ID = "GatehouseDocumentID"
 
     def create(self, gatehouse_create: GateHouse) -> GateHouse:

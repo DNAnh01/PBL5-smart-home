@@ -1,14 +1,14 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 
-class GateHouse(BaseModel):
+class TemperatureSensor(BaseModel):
     timestamp: datetime = Field(..., description="Timestamp of the image capture in ISO 8601 format")
-    status: bool
+    data: float
     
     class Config:
         schema_extra = {
             "example": {
                 "timestamp": "2023-04-09T12:34:56.789Z",
-                "status": False 
+                "data": 32.5
             }
         }

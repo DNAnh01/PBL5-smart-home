@@ -4,7 +4,7 @@ from schemas.camera_schema import Camera
 
 
 class CameraDao:
-    collection_name = "camera"
+    collection_name = "Camera"
     camera_document_ID = "CameraDocumentID"
 
     def create(self, camera_create: Camera) -> Camera:

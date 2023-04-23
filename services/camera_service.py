@@ -14,3 +14,5 @@ class CameraService:
     
     def update_camera(self, camera_update: Camera) -> Camera:
         return camera_dao.update(camera_update)
+    
+    
