@@ -1,4 +1,4 @@
-from typing import List
+# from typing import List
 
 from daos.camera_dao import CameraDao
 from schemas.camera_schema import Camera

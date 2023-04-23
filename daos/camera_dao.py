@@ -1,6 +1,6 @@
 from database.connection import db
 from schemas.camera_schema import Camera
-from typing import List
+# from typing import List
 
 
 class CameraDao:
