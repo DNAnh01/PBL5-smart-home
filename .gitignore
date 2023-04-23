@@ -1,2 +1,3 @@
 # ~/.gitignore_global
 __pycache__/
+*.whl
