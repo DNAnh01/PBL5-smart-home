@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 
 class GateHouse(BaseModel):
+    gatehouse_document_ID = "GatehouseDocumentID"
     timestamp: datetime = Field(..., description="Timestamp of the image capture in ISO 8601 format")
     status: bool
     

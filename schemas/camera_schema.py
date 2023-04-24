@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class Camera(BaseModel):
-    
+    camera_document_ID = "CameraDocumentID"
     timestamp: datetime = Field(..., description="Timestamp of the image capture in ISO 8601 format")
     description: Optional[str] = None
     images_encoded: List[str]
