@@ -1,15 +1,14 @@
-from pydantic import BaseModel, Field
-from datetime import datetime
+from pydantic import BaseModel
 
 class GateHouse(BaseModel):
     gatehouse_document_ID = "GatehouseDocumentID"
-    timestamp: datetime = Field(..., description="Timestamp of the image capture in ISO 8601 format")
+    timestamp: str
     status: bool
     
     class Config:
         schema_extra = {
             "example": {
-                "timestamp": "2023-04-09T12:34:56.789Z",
+                "timestamp": "2023-04-09 12:34:56",
                 "status": False 
             }
         }

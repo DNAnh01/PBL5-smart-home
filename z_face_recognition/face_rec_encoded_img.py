@@ -53,9 +53,9 @@ class FaceRecEncodedImg():
             cv.rectangle(rgb_img, (x,y), (x+w,y+h), (0,0,255), 3)
             cv.putText(rgb_img, text, (x,y-30), cv.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 3)
         if img is not None and len(img.shape) > 0 and img.shape[0] > 0 and img.shape[1] > 0: 
-            rgb_img = cv.cvtColor(rgb_img, cv.COLOR_BGR2RGB)
-            img_resized = cv.resize(rgb_img, (450, 700)) # Resize image for display
-            encoded_string = base64.b64encode(img_resized).decode('utf-8')
+            # rgb_img = cv.cvtColor(rgb_img, cv.COLOR_BGR2RGB)
+            img_resized = cv.resize(rgb_img, (500, 700)) # Resize image for display
+            encoded_string = base64.b64encode(cv.imencode('.jpg', img_resized)[1]).decode('utf-8')
             print(encoded_string)
             plt.imshow(img_resized)
             plt.title("Face Recognition:")
