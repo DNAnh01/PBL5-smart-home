@@ -17,7 +17,7 @@ encoder.fit(Y)
 haarcascade = cv.CascadeClassifier(current_path + "/haarcascade_frontalface_default.xml")
 model = pickle.load(open(current_path + "/svm_model_160x160.pkl", 'rb'))
 
-cap = cv.VideoCapture(0)
+cap = cv.VideoCapture("E:/BKDN/ky6/PBL5/temp/z_face_recognition/MTCNN_VGGFace/data/video5p/NhuQuynh/7586582879629730661.mp4")
 # WHILE LOOP
 while cap.isOpened():
     _, frame = cap.read()
@@ -31,7 +31,7 @@ while cap.isOpened():
         ypred = facenet.embeddings(img)
         face_prob = model.predict_proba(ypred)
         max_prob = np.max(face_prob)
-        if max_prob < 0.7:
+        if max_prob < 0.75:
             final_name = "unknown"
             text = "{}: {:.2f}%".format(final_name, max_prob*100)
         else:
