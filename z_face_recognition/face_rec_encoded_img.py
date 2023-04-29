@@ -23,11 +23,16 @@ class FaceRecEncodedImg():
         haarcascade = cv.CascadeClassifier(self.current_path + "/haarcascade_frontalface_default.xml")
         model = pickle.load(open(self.current_path + "/svm_model_160x160.pkl", 'rb'))
         # decoded image
+        
         decoded_image = base64.b64decode(self.encoded_img)
+        
         img_array = np.frombuffer(decoded_image, np.uint8)
         img = cv.imdecode(img_array, cv.IMREAD_COLOR)
+        plt.imshow(cv.cvtColor(img, cv.COLOR_BGR2RGB))
+        plt.show()
 
         rgb_img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+
         gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
         faces = haarcascade.detectMultiScale(gray_img, 1.3, 5)
         for x,y,w,h in faces:
