@@ -6,7 +6,7 @@ class NoticeDetails(BaseModel):
     notice_details_document_ID = "NoticeDetailsDocumentID"
     timestamp: str
     description: Optional[str] = None
-    details_info: List[str]
+    details_info: List[List[str]]
 
     class Config:
         schema_extra = {
