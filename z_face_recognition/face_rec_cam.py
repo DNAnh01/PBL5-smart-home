@@ -34,9 +34,9 @@ while cap.isOpened():
         face_name = model.predict(ypred)
         final_name = encoder.inverse_transform(face_name)[0]
         text = "{}: {:.2f}%".format(final_name, max_prob*100)
-        cv.rectangle(frame, (x,y), (x+w,y+h), (255,0,255), 10)
+        cv.rectangle(frame, (x,y), (x+w,y+h), (0,0,255), 3)
         cv.putText(frame, text, (x,y-30), cv.FONT_HERSHEY_SIMPLEX,
-                   1, (0,0,255), 3, cv.LINE_AA)
+                   1, (0,255,0), 3)
 
     cv.imshow("Face Recognition:", frame)
     if cv.waitKey(1) & 0xFF == ord('q'):
