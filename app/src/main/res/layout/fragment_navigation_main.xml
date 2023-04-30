@@ -63,7 +63,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/nhiet_do"
+                    android:src="@drawable/temperature"
                     android:layout_gravity="center_horizontal"/>
 
                 <TextView
@@ -91,7 +91,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/gas"
+                    android:src="@drawable/flame"
                     android:layout_gravity="center_horizontal"/>
 
                 <TextView
@@ -114,13 +114,14 @@
                 android:elevation="40dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp">
+
                 <ImageView
                     android:id="@+id/btn_humidity"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/do_am"
-                    android:layout_gravity="center_horizontal"/>
+                    android:src="@drawable/humidity" />
 
                 <TextView
                     android:id="@+id/tv_humidity"
@@ -150,11 +151,66 @@
             android:textSize="20dp"
             android:layout_marginLeft="30dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_thietBi"
-            android:layout_marginTop="10dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+
+            <LinearLayout
+                android:layout_width="160dp"
+                android:layout_height="190dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/device_bg"
+                android:elevation="30dp"
+                android:layout_marginLeft="30dp">
+
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:src="@drawable/door_color"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center_horizontal"/>
+
+                <Switch
+                    android:id="@+id/sw_door"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Status"
+                    android:textSize="20dp"
+                    android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="160dp"
+                android:layout_height="190dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:background="@drawable/device_bg"
+                android:elevation="30dp"
+                android:layout_marginLeft="20dp">
+
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:src="@drawable/lamp_color"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center_horizontal"/>
+
+                <Switch
+                    android:id="@+id/sw_led"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Status"
+                    android:textSize="20dp"
+                    android:layout_gravity="center_horizontal"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 

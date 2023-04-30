@@ -14,9 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.smarthomeapp.API.DeviceApi;
 import com.example.smarthomeapp.API.SensorApi;
+import com.example.smarthomeapp.Model.Device;
 import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.R;
 
@@ -28,6 +31,7 @@ import retrofit2.Response;
 public class NavigationMainFragment extends Fragment {
 
     private TextView tvHumidity, tvGas, tvTemperature;
+    private Switch swDoor;
     private Handler mHandler;
     private Runnable mRunnable;
 
@@ -37,19 +41,22 @@ public class NavigationMainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_navigation_main, container, false);
+
         tvGas = view.findViewById(R.id.tv_gas);
         tvHumidity = view.findViewById(R.id.tv_humidity);
         tvTemperature = view.findViewById(R.id.tv_temperature);
+
+        swDoor = view.findViewById(R.id.sw_door);
 
         mHandler = new Handler();
         mRunnable = new Runnable() {
             @Override
             public void run() {
                 load();
-                mHandler.postDelayed(mRunnable, 5000); // Gọi lại mỗi 5 giây
+                mHandler.postDelayed(mRunnable, 1000); // Gọi lại mỗi 5 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 5000); // Gọi đầu tiên sau 5 giây
+        mHandler.postDelayed(mRunnable, 1000); // Gọi đầu tiên sau 5 giây
 
         btnTemperature = view.findViewById(R.id.btn_temperature);
         btnTemperature.setOnClickListener(new View.OnClickListener() {
@@ -61,13 +68,18 @@ public class NavigationMainFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        load();
+    }
+
     private void load()
     {
-        getTemperatureSensor();
-        getGasSensor();
-        getHumiditySensor();
+        getSensor();
+        getDevice();
     }
-    private void getTemperatureSensor()
+    private void getSensor()
     {
         SensorApi.sensorApi.getTemperatureSensor().enqueue(new Callback<Sensor>() {
             @Override
@@ -80,13 +92,9 @@ public class NavigationMainFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<Sensor> call, Throwable t) {
-                Log.d("DEBUG", "fail: " + t.getMessage());
+                Log.d("DEBUG", "fail temperature: " + t.getMessage());
             }
         });
-    }
-
-    private void getGasSensor()
-    {
         SensorApi.sensorApi.getGasSensor().enqueue(new Callback<Sensor>() {
             @Override
             public void onResponse(Call<Sensor> call, Response<Sensor> response) {
@@ -98,25 +106,40 @@ public class NavigationMainFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<Sensor> call, Throwable t) {
-                Log.d("DEBUG", "fail: " + t.getMessage());
+                Log.d("DEBUG", "fail temperature: " + t.getMessage());
             }
         });
-    }
-
-    private void getHumiditySensor()
-    {
         SensorApi.sensorApi.getHumiditySensor().enqueue(new Callback<Sensor>() {
             @Override
             public void onResponse(Call<Sensor> call, Response<Sensor> response) {
                 Sensor sensor = response.body();
-                if(sensor!= null)
+                if(sensor != null)
                 {
                     tvHumidity.setText(sensor.getData());
                 }
             }
             @Override
             public void onFailure(Call<Sensor> call, Throwable t) {
-                Log.d("DEBUG", "fail: " + t.getMessage());
+                Log.d("DEBUG", "fail temperature: " + t.getMessage());
+            }
+        });
+    }
+
+    private void getDevice()
+    {
+        DeviceApi.deviceApi.getStatusGate().enqueue(new Callback<Device>() {
+            @Override
+            public void onResponse(Call<Device> call, Response<Device> response) {
+                Device device = response.body();
+                if(device != null)
+                {
+                    swDoor.setChecked(device.getStatus());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Device> call, Throwable t) {
+                Log.d("DEBUG", "fail deive gate: " + t.getMessage());
             }
         });
     }

@@ -12,11 +12,11 @@ import retrofit2.http.GET;
 public interface DeviceApi {
     //https://pbl5-5jdn.onrender.com/gatehouse/get/GatehouseDocumentID
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    SensorApi sensorApi = new Retrofit.Builder()
+    DeviceApi deviceApi = new Retrofit.Builder()
             .baseUrl("https://pbl5-5jdn.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-            .create(SensorApi.class);
+            .create(DeviceApi.class);
 
     @GET("gatehouse/get/GatehouseDocumentID")
     Call<Device> getStatusGate();

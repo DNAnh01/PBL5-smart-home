@@ -1,17 +1,17 @@
 package com.example.smarthomeapp.Model;
 
 public class Device {
-    private String status;
+    private Boolean status;
 
-    public Device(String status) {
+    public Device(Boolean status) {
         this.status = status;
     }
 
-    public String getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 }
