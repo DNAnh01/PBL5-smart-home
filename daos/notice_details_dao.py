@@ -7,6 +7,7 @@ class NoticeDetailsDao:
 
     def create(self, notice_details_create: NoticeDetails) -> NoticeDetails:
         data = notice_details_create.dict()
+        print(data)
         data["notice_details_document_ID"] = str(data["notice_details_document_ID"])
         doc_ref = db.collection(self.collection_name).document(notice_details_create.notice_details_document_ID)
         doc_ref.set(data)
