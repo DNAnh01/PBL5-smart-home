@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:elevation="30dp"
+    android:background="@drawable/device_bg"
+    android:layout_margin="10dp">
+
+    <TextView
+        android:id="@+id/tv_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/orange"
+        android:textSize="20dp"
+        android:text="2023-05-01 10:28:23"/>
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/orange"
+        android:textSize="30dp"
+        android:text="Thong bao"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/img_images_encoded"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:src="@color/orange"/>
+
+</LinearLayout>

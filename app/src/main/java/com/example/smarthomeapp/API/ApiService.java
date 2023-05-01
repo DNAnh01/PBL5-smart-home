@@ -10,25 +10,32 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
-public interface SensorApi {
+public interface ApiService {
+
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-    //https://pbl5-5jdn.onrender.com/temperature_sensor/get/TemperatureSensorDocumentID
-    //https://pbl5-5jdn.onrender.com/gas_sensor/get/GasSensorDocumentID
-    //https://pbl5-5jdn.onrender.com/humidity_sensor/get/HumiditySensorDocumentID
-    SensorApi sensorApi = new Retrofit.Builder()
+    ApiService apiService = new Retrofit.Builder()
             .baseUrl("https://pbl5-5jdn.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-            .create(SensorApi.class);
-    //get temperature
+            .create(ApiService.class);
+
+    //Sensor
+    //https://pbl5-5jdn.onrender.com/temperature_sensor/get/TemperatureSensorDocumentID
     @GET("temperature_sensor/get/TemperatureSensorDocumentID")
     Call<Sensor> getTemperatureSensor();
 
+    //https://pbl5-5jdn.onrender.com/gas_sensor/get/GasSensorDocumentID
     @GET("gas_sensor/get/GasSensorDocumentID")
     Call<Sensor> getGasSensor();
 
+    //https://pbl5-5jdn.onrender.com/humidity_sensor/get/HumiditySensorDocumentID
     @GET("humidity_sensor/get/HumiditySensorDocumentID")
     Call<Sensor> getHumiditySensor();
 
+    //Device
+    //https://pbl5-5jdn.onrender.com/gatehouse/get/GatehouseDocumentID
+    @GET("gatehouse/get/GatehouseDocumentID")
+    Call<Device> getStatusGate();
 
+    //Notification
 }

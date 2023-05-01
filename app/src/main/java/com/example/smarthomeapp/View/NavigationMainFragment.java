@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.smarthomeapp.API.ApiService;
 import com.example.smarthomeapp.API.DeviceApi;
 import com.example.smarthomeapp.API.SensorApi;
 import com.example.smarthomeapp.Model.Device;
@@ -81,7 +82,7 @@ public class NavigationMainFragment extends Fragment {
     }
     private void getSensor()
     {
-        SensorApi.sensorApi.getTemperatureSensor().enqueue(new Callback<Sensor>() {
+        ApiService.apiService.getTemperatureSensor().enqueue(new Callback<Sensor>() {
             @Override
             public void onResponse(Call<Sensor> call, Response<Sensor> response) {
                 Sensor sensor = response.body();
@@ -95,7 +96,7 @@ public class NavigationMainFragment extends Fragment {
                 Log.d("DEBUG", "fail temperature: " + t.getMessage());
             }
         });
-        SensorApi.sensorApi.getGasSensor().enqueue(new Callback<Sensor>() {
+        ApiService.apiService.getGasSensor().enqueue(new Callback<Sensor>() {
             @Override
             public void onResponse(Call<Sensor> call, Response<Sensor> response) {
                 Sensor sensor = response.body();
@@ -109,7 +110,7 @@ public class NavigationMainFragment extends Fragment {
                 Log.d("DEBUG", "fail temperature: " + t.getMessage());
             }
         });
-        SensorApi.sensorApi.getHumiditySensor().enqueue(new Callback<Sensor>() {
+        ApiService.apiService.getHumiditySensor().enqueue(new Callback<Sensor>() {
             @Override
             public void onResponse(Call<Sensor> call, Response<Sensor> response) {
                 Sensor sensor = response.body();
@@ -127,7 +128,7 @@ public class NavigationMainFragment extends Fragment {
 
     private void getDevice()
     {
-        DeviceApi.deviceApi.getStatusGate().enqueue(new Callback<Device>() {
+        ApiService.apiService.getStatusGate().enqueue(new Callback<Device>() {
             @Override
             public void onResponse(Call<Device> call, Response<Device> response) {
                 Device device = response.body();
