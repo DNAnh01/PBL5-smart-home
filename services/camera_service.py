@@ -50,15 +50,13 @@ class CameraService:
                 gatehouse_service.update_gatehouse("GatehouseDocumentID",
                                                    GateHouse(
                                                                 status=True,
-                                                                timestamp=camera_update.timestamp)
-                                                            )
+                                                                timestamp=camera_update.timestamp))
                 # update notice details
                 notice_details_service.update_notice_details("NoticeDetailsDocumentID",
                                                              NoticeDetails(
                                                                 timestamp=camera_update.timestamp,
-                                                                info=str(f"{person_to_open} <3 {max_confidence}"),
-                                                                image_encoded_pred=pred_encode_imgs[0][1])
-                                                            )
+                                                                info=[str(f"{person_to_open} <3 {max_confidence}")],
+                                                                image_encoded_pred=[pred_encode_imgs[0][1]]))
                 print(f"Opening gate for {person_to_open}")
             else:
                 # update gatehouse
