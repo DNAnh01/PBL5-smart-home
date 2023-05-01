@@ -52,5 +52,5 @@ def face_rec_encoded_imgs(encoded_imgs):
             encoded_string = base64.b64encode(cv.imencode('.jpg', img_resized)[1]).decode('utf-8')
         facial_recognition_information.append(encoded_string)
         result.append(facial_recognition_information)
-    return result
+    return result[0][1]
         
