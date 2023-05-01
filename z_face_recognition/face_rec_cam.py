@@ -17,7 +17,7 @@ encoder.fit(Y)
 haarcascade = cv.CascadeClassifier(current_path + "/haarcascade_frontalface_default.xml")
 model = pickle.load(open(current_path + "/svm_model_160x160.pkl", 'rb'))
 
-cap = cv.VideoCapture("E:/BKDN/ky6/PBL5/temp/z_face_recognition/MTCNN_VGGFace/data/video5p/NhuQuynh/7586582879629730661.mp4")
+cap = cv.VideoCapture("E:/BKDN/ky6/PBL5/temp/z_face_recognition/MTCNN_VGGFace/data/video5p/NgocAnh/8264791936864192951.mp4")
 # WHILE LOOP
 while cap.isOpened():
     _, frame = cap.read()

@@ -1,10 +1,17 @@
 from daos.camera_dao import CameraDao
-from services.gatehouse_service import GatehouseService
 from schemas.camera_schema import Camera
+
+from services.gatehouse_service import GatehouseService
+from schemas.gatehouse_schema import GateHouse
+
+from services.notice_details_service import NoticeDetailsService
+from schemas.notice_details_schema import NoticeDetails
+
 from z_face_recognition.face_rec_encoded_img import face_rec_encoded_imgs
 
 camera_dao = CameraDao()
 gatehouse_service = GatehouseService()
+notice_details_service = NoticeDetailsService()
 class CameraService:
     def create_camera(self, camera_create: Camera) -> Camera:
         return camera_dao.create(camera_create)
@@ -39,12 +46,26 @@ class CameraService:
             max_confidence = max(recognized_people.values())
             if max_confidence > 75:
                 person_to_open = [k for k, v in recognized_people.items() if v == max_confidence][0]
-                
+                # update gatehouse
+                gatehouse_service.update_gatehouse("GatehouseDocumentID",
+                                                   GateHouse(
+                                                                status=True,
+                                                                timestamp=camera_update.timestamp)
+                                                            )
+                # update notice details
+                notice_details_service.update_notice_details("NoticeDetailsDocumentID",
+                                                             NoticeDetails(
+                                                                timestamp=camera_update.timestamp,
+                                                                info=str(f"{person_to_open} <3 {max_confidence}"),
+                                                                image_encoded_pred=pred_encode_imgs[0][1])
+                                                            )
                 print(f"Opening gate for {person_to_open}")
-                # logic để mở cửa ở đây
             else:
+                # update gatehouse
+                gatehouse_service.update_gatehouse("GatehouseDocumentID",GateHouse(status=False,timestamp=camera_update.timestamp))
                 print("Not enough confidence to open the gate")
         else:
+            gatehouse_service.update_gatehouse("GatehouseDocumentID",GateHouse(status=False,timestamp=camera_update.timestamp))
             print("Unknown person detected")
 
 
