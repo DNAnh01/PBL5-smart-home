@@ -134,7 +134,14 @@ public class NavigationMainFragment extends Fragment {
                 Device device = response.body();
                 if(device != null)
                 {
-                    swDoor.setChecked(device.getStatus());
+                    if(device.getStatus() == 0 )
+                    {
+                        swDoor.setChecked(false);
+                    }
+                    else
+                    {
+                        swDoor.setChecked(true);
+                    }
                 }
             }
 

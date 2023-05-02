@@ -35,7 +35,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             return;
         }
         holder.tvTimestamp.setText(notification.getTimestamp());
-        holder.tvDescription.setText(notification.getDescription());
+        List<String> listInfo = notification.getInfo();
+        holder.tvInfo.setText(listInfo.get(0) + " đã mở cửa!");
     }
 
     @Override
@@ -49,11 +50,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public static class NotificationViewHolder extends RecyclerView.ViewHolder{
         private final TextView tvTimestamp;
-        private final TextView tvDescription;
+        private final TextView tvInfo;
         public NotificationViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
-            tvDescription = itemView.findViewById(R.id.tv_description);
+            tvInfo = itemView.findViewById(R.id.tv_info);
         }
     }
 }

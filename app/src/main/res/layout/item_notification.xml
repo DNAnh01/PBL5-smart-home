@@ -17,11 +17,11 @@
         android:text="2023-05-01 10:28:23"/>
 
     <TextView
-        android:id="@+id/tv_description"
+        android:id="@+id/tv_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/orange"
-        android:textSize="30dp"
+        android:textSize="20dp"
         android:text="Thong bao"
         android:textStyle="bold"/>
 

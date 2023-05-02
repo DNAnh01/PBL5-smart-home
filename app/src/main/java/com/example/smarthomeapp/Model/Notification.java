@@ -2,18 +2,22 @@ package com.example.smarthomeapp.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Notification {
-    @SerializedName("bred_for")
-    private String timestamp;
-    @SerializedName("breed_group")
-    private String description;
-    @SerializedName("life_span")
-    private String images_encoded;
+import java.util.List;
 
-    public Notification(String timestamp, String description, String images_encoded) {
+public class Notification {
+    @SerializedName("timestamp")
+    private String timestamp;
+
+    @SerializedName("info")
+    private List<String> info;
+
+    @SerializedName("image_encoded_pred")
+    private List<String> imageEncodedPred;
+
+    public Notification(String timestamp, List<String> info, List<String> imageEncodedPred) {
         this.timestamp = timestamp;
-        this.description = description;
-        this.images_encoded = images_encoded;
+        this.info = info;
+        this.imageEncodedPred = imageEncodedPred;
     }
 
     public String getTimestamp() {
@@ -24,19 +28,19 @@ public class Notification {
         this.timestamp = timestamp;
     }
 
-    public String getDescription() {
-        return description;
+    public List<String> getInfo() {
+        return info;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setInfo(List<String> info) {
+        this.info = info;
     }
 
-    public String getImages_encoded() {
-        return images_encoded;
+    public List<String> getImageEncodedPred() {
+        return imageEncodedPred;
     }
 
-    public void setImages_encoded(String images_encoded) {
-        this.images_encoded = images_encoded;
+    public void setImageEncodedPred(List<String> imageEncodedPred) {
+        this.imageEncodedPred = imageEncodedPred;
     }
 }

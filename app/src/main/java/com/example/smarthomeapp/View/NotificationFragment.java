@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.smarthomeapp.API.NotificationApi;
 import com.example.smarthomeapp.Adapter.NotificationAdapter;
 import com.example.smarthomeapp.Model.Notification;
+import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.R;
 
 import java.util.ArrayList;
@@ -51,10 +52,11 @@ public class NotificationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getListNotifications();
+     //   getListNotifications();
+        getNotification();
     }
 
-    private void getListNotifications()
+/*    private void getListNotifications()
     {
         NotificationApi.notificationApi.getListNotifications().enqueue(new Callback<List<Notification>>() {
             @Override
@@ -62,11 +64,32 @@ public class NotificationFragment extends Fragment {
                 listNotification = response.body();
                 NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
                 rvListNotification.setAdapter(notificationAdapter);
+                Log.d("DEBUG", "get notification success:" + response.body().toString());
             }
 
             @Override
             public void onFailure(Call<List<Notification>> call, Throwable t) {
                 Log.d("DEBUG", "get notification fail:" + t.getMessage());
+            }
+        });
+    }*/
+    private void getNotification()
+    {
+        NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
+            @Override
+            public void onResponse(Call<Notification> call, Response<Notification> response) {
+                Notification notification = response.body();
+                if(notification != null)
+                {
+                    listNotification.add(notification);
+                    NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
+                    rvListNotification.setAdapter(notificationAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Notification> call, Throwable t) {
+
             }
         });
     }

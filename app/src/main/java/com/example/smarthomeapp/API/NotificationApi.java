@@ -13,13 +13,18 @@ import retrofit2.http.GET;
 
 public interface NotificationApi {
     //https://raw.githubusercontent.com/DevTides/DogsApi/master/dogs.json
+    //https://pbl5-5jdn.onrender.com/notice_details/get/NoticeDetailsDocumentID
+
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     NotificationApi notificationApi = new Retrofit.Builder()
-            .baseUrl("https://raw.githubusercontent.com/")
+            .baseUrl("https://pbl5-5jdn.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(NotificationApi.class);
 
-    @GET("DevTides/DogsApi/master/dogs.json")
+    @GET("notice_details/get/NoticeDetailsDocumentID")
     Call<List<Notification>> getListNotifications();
+
+    @GET("notice_details/get/NoticeDetailsDocumentID")
+    Call<Notification> getNotification();
 }
