@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,9 @@ public class NotificationFragment extends Fragment {
 
     private RecyclerView rvListNotification;
     private List<Notification> listNotification;
+
+    private Handler mHandler;
+    private Runnable mRunnable;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +49,17 @@ public class NotificationFragment extends Fragment {
         rvListNotification.addItemDecoration(itemDecoration);
 
         listNotification = new ArrayList<>();
+
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getNotification();
+                mHandler.postDelayed(mRunnable, 1000); // Gọi lại mỗi 5 giây
+            }
+        };
+        mHandler.postDelayed(mRunnable, 1000); // Gọi đầu tiên sau 5 giây
+
 
         return view;
     }
@@ -78,6 +93,7 @@ public class NotificationFragment extends Fragment {
         NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
             @Override
             public void onResponse(Call<Notification> call, Response<Notification> response) {
+                listNotification = new ArrayList<>();
                 Notification notification = response.body();
                 if(notification != null)
                 {
@@ -89,7 +105,7 @@ public class NotificationFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Notification> call, Throwable t) {
-
+                Log.d("DEBUG", "get notification fail:" + t.getMessage());
             }
         });
     }

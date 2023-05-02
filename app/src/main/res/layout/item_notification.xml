@@ -26,9 +26,9 @@
         android:textStyle="bold"/>
 
     <ImageView
-        android:id="@+id/img_images_encoded"
+        android:id="@+id/img_image"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:src="@color/orange"/>
+        android:layout_height="200dp"
+        android:src="@color/orange" />
 
 </LinearLayout>

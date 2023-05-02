@@ -1,6 +1,7 @@
 package com.example.smarthomeapp.API;
 
 import com.example.smarthomeapp.Model.Device;
+import com.example.smarthomeapp.Model.Notification;
 import com.example.smarthomeapp.Model.Sensor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,4 +39,6 @@ public interface ApiService {
     Call<Device> getStatusGate();
 
     //Notification
+    @GET("notice_details/get/NoticeDetailsDocumentID")
+    Call<Notification> getNotification();
 }

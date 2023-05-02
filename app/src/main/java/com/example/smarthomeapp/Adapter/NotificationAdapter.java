@@ -1,8 +1,12 @@
 package com.example.smarthomeapp.Adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,8 +39,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             return;
         }
         holder.tvTimestamp.setText(notification.getTimestamp());
-        List<String> listInfo = notification.getInfo();
-        holder.tvInfo.setText(listInfo.get(0) + " đã mở cửa!");
+        holder.tvInfo.setText(notification.getInfo().get(0) + " đã mở cửa!");
+        List<String> listImg = notification.getImageEncodedPred();
+        byte[] bytes = Base64.decode(listImg.get(0),Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        holder.imgImage.setImageBitmap(bitmap);
     }
 
     @Override
@@ -51,10 +58,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public static class NotificationViewHolder extends RecyclerView.ViewHolder{
         private final TextView tvTimestamp;
         private final TextView tvInfo;
+        private final ImageView imgImage;
         public NotificationViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
             tvInfo = itemView.findViewById(R.id.tv_info);
+            imgImage = itemView.findViewById(R.id.img_image);
         }
     }
+
+
 }
