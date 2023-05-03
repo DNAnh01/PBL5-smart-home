@@ -14,16 +14,16 @@ faces_embeddings = np.load(current_path + "/faces_embeddings_done_4classes.npz")
 Y = faces_embeddings['arr_1']
 encoder = LabelEncoder()
 encoder.fit(Y)
-haarcascade = cv.CascadeClassifier(current_path + "/haarcascade_frontalface_default.xml")
+detector = cv.CascadeClassifier(current_path + "/haarcascade_frontalface_default.xml")
 model = pickle.load(open(current_path + "/svm_model_160x160.pkl", 'rb'))
 
-cap = cv.VideoCapture("E:/BKDN/ky6/PBL5/temp/z_face_recognition/MTCNN_VGGFace/data/video5p/NgocAnh/8264791936864192951.mp4")
+cap = cv.VideoCapture(0)
 # WHILE LOOP
 while cap.isOpened():
     _, frame = cap.read()
     rgb_img = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
     gray_img = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    faces = haarcascade.detectMultiScale(gray_img, 1.3, 5)
+    faces = detector.detectMultiScale(gray_img, 1.3, 5)
     for x,y,w,h in faces:
         img = rgb_img[y:y+h, x:x+w]
         img = cv.resize(img, (160,160)) # 1x160x160x3

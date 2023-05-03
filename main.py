@@ -6,10 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers import (camera_router, 
                      notice_details_router,
-                     temperature_sensor_router, 
-                     humidity_sensor_router,
-                     gas_sensor_router,
-                     gatehouse_router)
+                     notice_details_view_router,
+                     sensors_router,
+                     sensors_view_router,
+                     gatehouse_router,
+                     led_router)
 
 app = FastAPI()
 
@@ -31,10 +32,8 @@ app.add_middleware(
 '''
 app.include_router(camera_router.router)
 app.include_router(notice_details_router.router)
-app.include_router(temperature_sensor_router.router)
-app.include_router(humidity_sensor_router.router)
-app.include_router(gas_sensor_router.router)
+app.include_router(notice_details_view_router.router)
+app.include_router(sensors_router.router)
+app.include_router(sensors_view_router.router)
 app.include_router(gatehouse_router.router)
-
-# if __name__=="__main__":
-#     uvicorn.run(app, port=10000, host="0.0.0.0")
+app.include_router(led_router.router)

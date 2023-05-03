@@ -16,4 +16,3 @@ async def get_notice_details(notice_details_document_ID: str) -> NoticeDetails:
         raise HTTPException(status_code=404, detail="notice details not found.")
     return result
 
-

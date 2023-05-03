@@ -7,11 +7,18 @@ from schemas.gatehouse_schema import GateHouse
 from services.notice_details_service import NoticeDetailsService
 from schemas.notice_details_schema import NoticeDetails
 
-from z_face_recognition.face_rec_encoded_img import face_rec_encoded_imgs
+from services.notice_details_view_service import NoticeDetailsViewService
+from schemas.notice_details_view_schema import NoticeDetailsView
+from collections import deque
+
+from z_face_recognition.face_rec_encoded_img_MTCNN import face_rec_encoded_imgs
 
 camera_dao = CameraDao()
 gatehouse_service = GatehouseService()
 notice_details_service = NoticeDetailsService()
+
+notice_details_view_service = NoticeDetailsViewService()
+
 class CameraService:
     def create_camera(self, camera_create: Camera) -> Camera:
         return camera_dao.create(camera_create)
@@ -24,16 +31,31 @@ class CameraService:
             Khi sử dụng router update camera:
             1. pred encode imgs
             2. đưa ra quyết định mở cửa (cổng), update gatehouse
-            3. update notice_details để app android get về show  
+            3. update notice_details , notice_details_view để app android get về show  
         '''
+        notice_details_view = notice_details_view_service.get_notice_details_view(
+            notice_details_view_document_ID="NoticeDetailsViewDocumentID")
+        notice_details_current = notice_details_service.get_notice_details(
+            notice_details_document_ID="NoticeDetailsDocumentID")
+        
+        def handel_update_notice_details_view(notice_details_view, notice_details_current):
+            notice_details = {"description": notice_details_current.description,
+                            "timestamp": notice_details_current.timestamp,
+                            "image_encoded_pred": notice_details_current.image_encoded_pred}
+            notice_details_info_update = deque(notice_details_view.info_details, maxlen=10)
+            notice_details_info_update.append(notice_details)
+            notice_details_info_update = list(notice_details_info_update)
+            notice_details_view_service.update_notice_details_view(notice_details_view_document_ID=
+                                                                "NoticeDetailsViewDocumentID",
+                                                                notice_details_view_update=NoticeDetailsView(info_details=notice_details_info_update))
+        
         # 1. pred encode imgs
         pred_encode_imgs = face_rec_encoded_imgs(camera_update.images_encoded)
         '''
             [['NguyenAnh: 79.03%', 'image_encoded_pred_0'],
             ['NguyenAnh: 79.03%', 'image_encoded_pred_1'],
-            ['NguyenAnh: 79.03%', 'image_encoded_pred_3'],
-            ['NguyenAnh: 79.03%', 'image_encoded_pred_4'],
-            ['NguyenAnh: 79.03%', 'image_encoded_pred_5']]
+            ['NguyenAnh: 79.03%', 'image_encoded_pred_3']]
+
         '''
         #  2. đưa ra quyết định mở cửa (cổng), update gatehouse
         recognized_people = {}
@@ -55,18 +77,22 @@ class CameraService:
                 notice_details_service.update_notice_details("NoticeDetailsDocumentID",
                                                              NoticeDetails(
                                                                 timestamp=camera_update.timestamp,
-                                                                info=[str(f"{person_to_open} - {max_confidence} %")],
-                                                                image_encoded_pred=[pred_encode_imgs[0][1]]))
+                                                                description=str(f"{person_to_open} - {max_confidence} %"),
+                                                                image_encoded_pred=pred_encode_imgs[0][1]))
+                # update notice details view
+                handel_update_notice_details_view(notice_details_view, notice_details_current)
                 print(f"Opening gate for {person_to_open}")
             else:
                 # update gatehouse
                 gatehouse_service.update_gatehouse("GatehouseDocumentID",GateHouse(status=0,timestamp=camera_update.timestamp))
+                # update notice details view
+                handel_update_notice_details_view(notice_details_view, notice_details_current)
                 print("Not enough confidence to open the gate")
         else:
             gatehouse_service.update_gatehouse("GatehouseDocumentID",GateHouse(status=0,timestamp=camera_update.timestamp))
+            # update notice details view
+            handel_update_notice_details_view(notice_details_view, notice_details_current)
             print("Unknown person detected")
-
-
         #  3. update notice_details để app android get về show 
         return camera_dao.update(camera_document_ID, camera_update)
     

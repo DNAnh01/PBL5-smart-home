@@ -16,11 +16,6 @@ pip install -r requirements.txt
 
 run cmd: uvicorn main:app --reload
 
-## Firestore DB:
-
-
-<img src="./firestore db design.drawio.png" width="" height="">
-
 ## Link tham khảo:
 
 link 1: https://github.com/anthonycorletti/firestore-fastapi?fbclid=IwAR1q6Nm6jQJ28UFIEd2R1l8ogLqxxdJBWPgdWdxsJvQoQKYkAr3jIcfiOxA

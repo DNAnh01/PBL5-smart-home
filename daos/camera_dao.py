@@ -20,7 +20,6 @@ class CameraDao:
             return Camera(**doc.to_dict())
         return
 
-
     def update(self, camera_document_ID: str, camera_update: Camera) -> Camera:
         data = camera_update.dict()
         doc_ref = db.collection(self.collection_name).document(camera_document_ID)

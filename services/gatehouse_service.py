@@ -11,5 +11,5 @@ class GatehouseService:
     def get_gatehouse(self, gatehouse_document_ID: str) -> GateHouse:
         return gatehouse_dao.get(gatehouse_document_ID)
     
-    def update_gatehouse(self, gatehouse_document_ID: str, gateHouse_update: GateHouse) -> GateHouse:
-        return gatehouse_dao.update(gatehouse_document_ID, gateHouse_update)
+    def update_gatehouse(self, gatehouse_document_ID: str, gatehouse_update: GateHouse) -> GateHouse:
+        return gatehouse_dao.update(gatehouse_document_ID, gatehouse_update)
