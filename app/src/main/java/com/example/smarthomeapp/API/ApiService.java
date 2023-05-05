@@ -12,10 +12,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 public interface ApiService {
-
+    //https://pbl5-smart-home.onrender.com/
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     ApiService apiService = new Retrofit.Builder()
-            .baseUrl("https://pbl5-5jdn.onrender.com/")
+            .baseUrl("https://pbl5-smart-home.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService.class);

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.smarthomeapp.API.ApiService;
 import com.example.smarthomeapp.API.NotificationApi;
 import com.example.smarthomeapp.Adapter.NotificationAdapter;
 import com.example.smarthomeapp.Model.Notification;
@@ -90,7 +91,7 @@ public class NotificationFragment extends Fragment {
     }*/
     private void getNotification()
     {
-        NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
+        ApiService.apiService.getNotification().enqueue(new Callback<Notification>() {
             @Override
             public void onResponse(Call<Notification> call, Response<Notification> response) {
                 listNotification = new ArrayList<>();
