@@ -22,6 +22,7 @@ import com.example.smarthomeapp.API.DeviceApi;
 import com.example.smarthomeapp.API.SensorApi;
 import com.example.smarthomeapp.Model.Device;
 import com.example.smarthomeapp.Model.Sensor;
+import com.example.smarthomeapp.Model.SensorDetail;
 import com.example.smarthomeapp.R;
 
 import retrofit2.Call;
@@ -54,10 +55,10 @@ public class NavigationMainFragment extends Fragment {
             @Override
             public void run() {
                 load();
-                mHandler.postDelayed(mRunnable, 1000); // Gọi lại mỗi 5 giây
+                mHandler.postDelayed(mRunnable, 10000); // Gọi lại mỗi 5 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 1000); // Gọi đầu tiên sau 5 giây
+        mHandler.postDelayed(mRunnable, 10000); // Gọi đầu tiên sau 5 giây
 
         btnTemperature = view.findViewById(R.id.btn_temperature);
         btnTemperature.setOnClickListener(new View.OnClickListener() {
@@ -77,56 +78,10 @@ public class NavigationMainFragment extends Fragment {
 
     private void load()
     {
-        getSensor();
-        getDevice();
+        loadSensor();
+        loadDevice();
     }
-    private void getSensor()
-    {
-        ApiService.apiService.getTemperatureSensor().enqueue(new Callback<Sensor>() {
-            @Override
-            public void onResponse(Call<Sensor> call, Response<Sensor> response) {
-                Sensor sensor = response.body();
-                if(sensor!= null)
-                {
-                    tvTemperature.setText(sensor.getData());
-                }
-            }
-            @Override
-            public void onFailure(Call<Sensor> call, Throwable t) {
-                Log.d("DEBUG", "fail temperature: " + t.getMessage());
-            }
-        });
-        ApiService.apiService.getGasSensor().enqueue(new Callback<Sensor>() {
-            @Override
-            public void onResponse(Call<Sensor> call, Response<Sensor> response) {
-                Sensor sensor = response.body();
-                if(sensor!= null)
-                {
-                    tvGas.setText(sensor.getData());
-                }
-            }
-            @Override
-            public void onFailure(Call<Sensor> call, Throwable t) {
-                Log.d("DEBUG", "fail temperature: " + t.getMessage());
-            }
-        });
-        ApiService.apiService.getHumiditySensor().enqueue(new Callback<Sensor>() {
-            @Override
-            public void onResponse(Call<Sensor> call, Response<Sensor> response) {
-                Sensor sensor = response.body();
-                if(sensor != null)
-                {
-                    tvHumidity.setText(sensor.getData());
-                }
-            }
-            @Override
-            public void onFailure(Call<Sensor> call, Throwable t) {
-                Log.d("DEBUG", "fail temperature: " + t.getMessage());
-            }
-        });
-    }
-
-    private void getDevice()
+    private void loadDevice()
     {
         ApiService.apiService.getStatusGate().enqueue(new Callback<Device>() {
             @Override
@@ -148,6 +103,26 @@ public class NavigationMainFragment extends Fragment {
             @Override
             public void onFailure(Call<Device> call, Throwable t) {
                 Log.d("DEBUG", "fail deive gate: " + t.getMessage());
+            }
+        });
+    }
+    private void loadSensor()
+    {
+        SensorApi.sensorApi.getAllSensor().enqueue(new Callback<SensorDetail>() {
+            @Override
+            public void onResponse(Call<SensorDetail> call, Response<SensorDetail> response) {
+                SensorDetail sensor = response.body();
+                if(sensor != null)
+                {
+                    tvGas.setText(sensor.getGas_sensor_data());
+                    tvHumidity.setText(sensor.getHumidity_sensor_data());
+                    tvTemperature.setText(sensor.getTemperature_sensor_data());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SensorDetail> call, Throwable t) {
+                Log.d("DEBUG", "fail sensor: " + t.getMessage());
             }
         });
     }

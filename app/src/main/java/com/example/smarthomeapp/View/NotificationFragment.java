@@ -19,10 +19,16 @@ import com.example.smarthomeapp.API.ApiService;
 import com.example.smarthomeapp.API.NotificationApi;
 import com.example.smarthomeapp.Adapter.NotificationAdapter;
 import com.example.smarthomeapp.Model.Notification;
+import com.example.smarthomeapp.Model.NotificationView;
 import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,7 +39,12 @@ import retrofit2.Response;
 public class NotificationFragment extends Fragment {
 
     private RecyclerView rvListNotification;
+    private NotificationView notificationView;
     private List<Notification> listNotification;
+
+    private Notification notification;
+
+    private NotificationAdapter notificationAdapter;
 
     private Handler mHandler;
     private Runnable mRunnable;
@@ -51,61 +62,60 @@ public class NotificationFragment extends Fragment {
 
         listNotification = new ArrayList<>();
 
-        mHandler = new Handler();
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                getNotification();
-                mHandler.postDelayed(mRunnable, 1000); // Gọi lại mỗi 5 giây
-            }
-        };
-        mHandler.postDelayed(mRunnable, 1000); // Gọi đầu tiên sau 5 giây
-
-
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-     //   getListNotifications();
-        getNotification();
+        getListNotifications();
     }
 
-/*    private void getListNotifications()
+    private void getListNotifications()
     {
-        NotificationApi.notificationApi.getListNotifications().enqueue(new Callback<List<Notification>>() {
-            @Override
-            public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
-                listNotification = response.body();
-                NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
-                rvListNotification.setAdapter(notificationAdapter);
-                Log.d("DEBUG", "get notification success:" + response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<List<Notification>> call, Throwable t) {
-                Log.d("DEBUG", "get notification fail:" + t.getMessage());
-            }
-        });
-    }*/
-    private void getNotification()
-    {
-        ApiService.apiService.getNotification().enqueue(new Callback<Notification>() {
+        NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
             @Override
             public void onResponse(Call<Notification> call, Response<Notification> response) {
-                listNotification = new ArrayList<>();
-                Notification notification = response.body();
-                if(notification != null)
-                {
-                    listNotification.add(notification);
-                    NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
-                    rvListNotification.setAdapter(notificationAdapter);
-                }
+                notification = response.body();
+                listNotification.add(notification);
+                notificationAdapter = new NotificationAdapter(listNotification);
+                rvListNotification.setAdapter(notificationAdapter);
+                Log.d("DEBUG", "get notification detail success:" + response.body().toString());
             }
 
             @Override
             public void onFailure(Call<Notification> call, Throwable t) {
+                Log.d("DEBUG", "get notification detail fail:" + t.getMessage());
+            }
+        });
+        NotificationApi.notificationApi.getListDetailView().enqueue(new Callback<NotificationView>() {
+            @Override
+            public void onResponse(Call<NotificationView> call, Response<NotificationView> response) {
+             /*   notificationView = response.body();
+                if (notificationView != null && notificationView.getInfo_details() != null) {
+                    listNotification.addAll(notificationView.getInfo_details());
+                    NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
+                    rvListNotification.setAdapter(notificationAdapter);
+                    Log.d("DEBUG", "get notification success:" + response.body().toString());
+                } else {
+                    Log.d("DEBUG", "get notification success: response body or info_details is null");
+                }*/
+
+                notificationView = response.body();
+                if (notificationView != null && notificationView.getInfo_details() != null) {
+                    List<Notification> tempList = new ArrayList<>(notificationView.getInfo_details());
+                    Collections.reverse(tempList);
+                    listNotification.addAll(tempList);
+                    NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
+                    rvListNotification.setAdapter(notificationAdapter);
+                    Log.d("DEBUG", "get notification success:" + response.body().toString());
+                } else {
+                    Log.d("DEBUG", "get notification success: response body or info_details is null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NotificationView> call, Throwable t) {
                 Log.d("DEBUG", "get notification fail:" + t.getMessage());
             }
         });

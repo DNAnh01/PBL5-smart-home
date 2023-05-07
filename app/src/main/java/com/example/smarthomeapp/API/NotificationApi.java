@@ -1,6 +1,7 @@
 package com.example.smarthomeapp.API;
 
 import com.example.smarthomeapp.Model.Notification;
+import com.example.smarthomeapp.Model.NotificationView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -22,9 +23,11 @@ public interface NotificationApi {
             .build()
             .create(NotificationApi.class);
 
-    @GET("notice_details/get/NoticeDetailsDocumentID")
-    Call<List<Notification>> getListNotifications();
 
+    //https://pbl5-5jdn.onrender.com/notice_details_view/get/NoticeDetailsViewDocumentID
+    @GET("notice_details_view/get/NoticeDetailsViewDocumentID")
+    Call<NotificationView> getListDetailView();
+    //https://pbl5-5jdn.onrender.com/notice_details/get/NoticeDetailsDocumentID
     @GET("notice_details/get/NoticeDetailsDocumentID")
     Call<Notification> getNotification();
 }

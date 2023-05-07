@@ -39,11 +39,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             return;
         }
         holder.tvTimestamp.setText(notification.getTimestamp());
-        holder.tvInfo.setText(notification.getInfo().get(0) + " đã mở cửa!");
-        List<String> listImg = notification.getImageEncodedPred();
-        byte[] bytes = Base64.decode(listImg.get(0),Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-        holder.imgImage.setImageBitmap(bitmap);
+        holder.tvInfo.setText(notification.getDescription() + " đã mở cửa!");
+        String encodedImage = notification.getImage_encoded_pred();
+        if(encodedImage != null && !encodedImage.equals("img_encode_pred") && !encodedImage.equals("")) {
+            byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            holder.imgImage.setImageBitmap(bitmap);
+        }
     }
 
     @Override

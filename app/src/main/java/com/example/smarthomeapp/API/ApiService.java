@@ -2,7 +2,9 @@ package com.example.smarthomeapp.API;
 
 import com.example.smarthomeapp.Model.Device;
 import com.example.smarthomeapp.Model.Notification;
+import com.example.smarthomeapp.Model.NotificationView;
 import com.example.smarthomeapp.Model.Sensor;
+import com.example.smarthomeapp.Model.SensorDetail;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -21,17 +23,9 @@ public interface ApiService {
             .create(ApiService.class);
 
     //Sensor
-    //https://pbl5-5jdn.onrender.com/temperature_sensor/get/TemperatureSensorDocumentID
-    @GET("temperature_sensor/get/TemperatureSensorDocumentID")
-    Call<Sensor> getTemperatureSensor();
-
-    //https://pbl5-5jdn.onrender.com/gas_sensor/get/GasSensorDocumentID
-    @GET("gas_sensor/get/GasSensorDocumentID")
-    Call<Sensor> getGasSensor();
-
-    //https://pbl5-5jdn.onrender.com/humidity_sensor/get/HumiditySensorDocumentID
-    @GET("humidity_sensor/get/HumiditySensorDocumentID")
-    Call<Sensor> getHumiditySensor();
+    //https://pbl5-5jdn.onrender.com/sensors/get/SensorsDocumentID
+    @GET("sensors/get/SensorsDocumentID")
+    Call<SensorDetail> getAllSensor();
 
     //Device
     //https://pbl5-5jdn.onrender.com/gatehouse/get/GatehouseDocumentID
@@ -39,6 +33,10 @@ public interface ApiService {
     Call<Device> getStatusGate();
 
     //Notification
+    //https://pbl5-5jdn.onrender.com/notice_details_view/get/NoticeDetailsViewDocumentID
+    @GET("notice_details_view/get/NoticeDetailsViewDocumentID")
+    Call<NotificationView> getListDetailView();
+    //https://pbl5-5jdn.onrender.com/notice_details/get/NoticeDetailsDocumentID
     @GET("notice_details/get/NoticeDetailsDocumentID")
     Call<Notification> getNotification();
 }

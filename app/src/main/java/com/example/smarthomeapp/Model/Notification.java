@@ -5,19 +5,44 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Notification {
-    @SerializedName("timestamp")
+    /*
+    {
+  "info_details": [
+    {
+      "description": "",
+      "timestamp": "12:34:56",
+      "image_encoded_pred": ""
+    },
+    {
+      "description": "",
+      "timestamp": "12:40:00",
+      "image_encoded_pred": ""
+    },
+    {
+      "description": "description",
+      "timestamp": "2023-04-09 12:34:56",
+      "image_encoded_pred": "img_encode_pred"
+    }
+  ],
+  "notice_details_view_document_ID": "NoticeDetailsViewDocumentID"
+}
+     */
+    private String description;
     private String timestamp;
+    private String image_encoded_pred;
 
-    @SerializedName("info")
-    private List<String> info;
-
-    @SerializedName("image_encoded_pred")
-    private List<String> imageEncodedPred;
-
-    public Notification(String timestamp, List<String> info, List<String> imageEncodedPred) {
+    public Notification(String description, String timestamp, String image_encoded_pred) {
+        this.description = description;
         this.timestamp = timestamp;
-        this.info = info;
-        this.imageEncodedPred = imageEncodedPred;
+        this.image_encoded_pred = image_encoded_pred;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTimestamp() {
@@ -28,19 +53,11 @@ public class Notification {
         this.timestamp = timestamp;
     }
 
-    public List<String> getInfo() {
-        return info;
+    public String getImage_encoded_pred() {
+        return image_encoded_pred;
     }
 
-    public void setInfo(List<String> info) {
-        this.info = info;
-    }
-
-    public List<String> getImageEncodedPred() {
-        return imageEncodedPred;
-    }
-
-    public void setImageEncodedPred(List<String> imageEncodedPred) {
-        this.imageEncodedPred = imageEncodedPred;
+    public void setImage_encoded_pred(String image_encoded_pred) {
+        this.image_encoded_pred = image_encoded_pred;
     }
 }
