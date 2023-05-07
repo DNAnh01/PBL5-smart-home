@@ -9,23 +9,16 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.smarthomeapp.API.ApiService;
 import com.example.smarthomeapp.API.NotificationApi;
 import com.example.smarthomeapp.Adapter.NotificationAdapter;
 import com.example.smarthomeapp.Model.Notification;
 import com.example.smarthomeapp.Model.NotificationView;
-import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.R;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,8 +39,6 @@ public class NotificationFragment extends Fragment {
 
     private NotificationAdapter notificationAdapter;
 
-    private Handler mHandler;
-    private Runnable mRunnable;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,16 +82,6 @@ public class NotificationFragment extends Fragment {
         NotificationApi.notificationApi.getListDetailView().enqueue(new Callback<NotificationView>() {
             @Override
             public void onResponse(Call<NotificationView> call, Response<NotificationView> response) {
-             /*   notificationView = response.body();
-                if (notificationView != null && notificationView.getInfo_details() != null) {
-                    listNotification.addAll(notificationView.getInfo_details());
-                    NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
-                    rvListNotification.setAdapter(notificationAdapter);
-                    Log.d("DEBUG", "get notification success:" + response.body().toString());
-                } else {
-                    Log.d("DEBUG", "get notification success: response body or info_details is null");
-                }*/
-
                 notificationView = response.body();
                 if (notificationView != null && notificationView.getInfo_details() != null) {
                     List<Notification> tempList = new ArrayList<>(notificationView.getInfo_details());
