@@ -20,11 +20,18 @@ import android.widget.TextView;
 import com.example.smarthomeapp.API.DeviceApi;
 import com.example.smarthomeapp.API.SensorApi;
 import com.example.smarthomeapp.Model.Device;
+import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.Model.SensorDetail;
+import com.example.smarthomeapp.Model.SensorView;
 import com.example.smarthomeapp.R;
+import com.github.mikephil.charting.data.Entry;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -39,12 +46,15 @@ public class NavigationMainFragment extends Fragment {
     private Handler mHandler;
     private Runnable mRunnable;
 
-    private LinearLayout btnTemperature;
+    private SensorView sensorView;
+
+    private LinearLayout btnTemperature, btnGas, btnHumidity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_navigation_main, container, false);
+
 
         tvGas = view.findViewById(R.id.tv_gas);
         tvHumidity = view.findViewById(R.id.tv_humidity);
@@ -64,12 +74,29 @@ public class NavigationMainFragment extends Fragment {
         mHandler.postDelayed(mRunnable, 10000); // Gọi đầu tiên sau 5 giây
 
         btnTemperature = view.findViewById(R.id.btn_temperature);
+        btnGas = view.findViewById(R.id.btn_gas);
+        btnHumidity = view.findViewById(R.id.btn_humidity);
         btnTemperature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
             }
         });
+
+        btnGas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
+            }
+        });
+
+        btnHumidity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
+            }
+        });
+
 
         swDoor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -211,4 +238,45 @@ public class NavigationMainFragment extends Fragment {
 
 
     }
+
+  /*  private List<Sensor> getListSensor(String sensor)
+    {
+        SensorApi.sensorApi.getListSensorView().enqueue(new Callback<SensorView>() {
+            @Override
+            public void onResponse(Call<SensorView> call, Response<SensorView> response) {
+                sensorView = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<SensorView> call, Throwable t) {
+                Log.d("DEBUG", "fail to list sensor view");
+            }
+        });
+
+        if(sensor == "gas")
+        {
+            return sensorView.getGas_sensor();
+        }
+        else if(sensor == "temperature")
+        {
+            return sensorView.getTemperature_sensor();
+        }
+        else if(sensor == "humidity")
+        {
+            return sensorView.getHumidity_sensor();
+        }
+        return null;
+    }
+
+    private ArrayList<Entry> convertSensorDataToEntries(String sensorName) {
+        List<Sensor> listSensor = getListSensor(sensorName);
+        ArrayList<Entry> entries = new ArrayList<>();
+        int i = 0;
+        for (Sensor sensor : listSensor) {
+            entries.add(new Entry(i, Float.parseFloat(sensor.getData())));
+            i++;
+        }
+        return entries;
+    }*/
+
 }

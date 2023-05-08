@@ -78,7 +78,7 @@
             </LinearLayout>
 
             <LinearLayout
-
+                android:id="@+id/btn_gas"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 android:orientation="vertical"
@@ -87,7 +87,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp">
                 <ImageView
-                    android:id="@+id/btn_gas"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
@@ -106,7 +105,7 @@
             </LinearLayout>
 
             <LinearLayout
-
+                android:id="@+id/btn_humidity"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 android:orientation="vertical"
@@ -116,7 +115,7 @@
                 android:layout_marginTop="10dp">
 
                 <ImageView
-                    android:id="@+id/btn_humidity"
+
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
@@ -211,6 +210,16 @@
         </LinearLayout>
     </LinearLayout>
 
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
 
+    <me.relex.circleindicator.CircleIndicator
+        android:id="@+id/circle_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"/>
 
 </LinearLayout>
