@@ -19,7 +19,7 @@ public interface SensorApi {
     //https://pbl5-5jdn.onrender.com/sensors/get/SensorsDocumentID
     //https://pbl5-5jdn.onrender.com/sensors_view/get/SensorsViewDocumentID
     SensorApi sensorApi = new Retrofit.Builder()
-            .baseUrl("https://pbl5-5jdn.onrender.com/")
+            .baseUrl("https://pbl5-9n8k.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(SensorApi.class);

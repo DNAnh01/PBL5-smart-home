@@ -20,7 +20,7 @@ public interface DeviceApi {
 
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     DeviceApi deviceApi = new Retrofit.Builder()
-            .baseUrl("https://pbl5-5jdn.onrender.com/")
+            .baseUrl("https://pbl5-9n8k.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(DeviceApi.class);

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,8 @@ public class NotificationFragment extends Fragment {
     private RecyclerView rvListNotification;
     private NotificationView notificationView;
     private List<Notification> listNotification;
+    private Handler mHandler;
+    private Runnable mRunnable;
 
     private Notification notification;
 
@@ -52,6 +55,15 @@ public class NotificationFragment extends Fragment {
         rvListNotification.addItemDecoration(itemDecoration);
 
         listNotification = new ArrayList<>();
+    /*    mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getListNotifications();
+                mHandler.postDelayed(mRunnable, 200000); // Gọi lại mỗi 5 giây
+            }
+        };
+        mHandler.postDelayed(mRunnable, 200000); // Gọi đầu tiên sau 5 giây*/
 
         return view;
     }

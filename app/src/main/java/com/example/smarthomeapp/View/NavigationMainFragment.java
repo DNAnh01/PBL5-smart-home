@@ -68,10 +68,10 @@ public class NavigationMainFragment extends Fragment {
             @Override
             public void run() {
                 load();
-                mHandler.postDelayed(mRunnable, 10000); // Gọi lại mỗi 5 giây
+                mHandler.postDelayed(mRunnable, 10000); // Gọi lại mỗi 10 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 10000); // Gọi đầu tiên sau 5 giây
+        mHandler.postDelayed(mRunnable, 10000); // Gọi đầu tiên sau 10 giây
 
         btnTemperature = view.findViewById(R.id.btn_temperature);
         btnGas = view.findViewById(R.id.btn_gas);

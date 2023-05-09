@@ -28,7 +28,7 @@ public class SensorViewAdapter extends RecyclerView.Adapter<SensorViewAdapter.Se
     @NonNull
     @Override
     public SensorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_notification, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sensor, parent, false);
         return new SensorViewHolder(view);
     }
 
@@ -38,6 +38,8 @@ public class SensorViewAdapter extends RecyclerView.Adapter<SensorViewAdapter.Se
         if (sensor == null) {
             return;
         }
+        holder.tvTimestamp.setText(sensor.getTimestamp());
+        holder.tvData.setText(sensor.getData());
       /*  holder.tvTimestamp.setText(sensor.getTimestamp());
         holder.tvInfo.setText(sensor.getInfo().get(0) + " đã mở cửa!");
         List<String> listImg = sensor.getImageEncodedPred();
@@ -56,14 +58,11 @@ public class SensorViewAdapter extends RecyclerView.Adapter<SensorViewAdapter.Se
 
     public static class SensorViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvTimestamp;
-        private final TextView tvInfo;
-        private final ImageView imgImage;
-
+        private final TextView tvData;
         public SensorViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTimestamp = itemView.findViewById(R.id.tv_timestamp);
-            tvInfo = itemView.findViewById(R.id.tv_info);
-            imgImage = itemView.findViewById(R.id.img_image);
+            tvTimestamp = itemView.findViewById(R.id.tv_time);
+            tvData = itemView.findViewById(R.id.tv_data);
         }
     }
 }
