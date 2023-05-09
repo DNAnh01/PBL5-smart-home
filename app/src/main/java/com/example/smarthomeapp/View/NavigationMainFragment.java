@@ -79,21 +79,21 @@ public class NavigationMainFragment extends Fragment {
         btnTemperature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
+                switchDetailFragment("Temperature",view);
             }
         });
 
         btnGas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
+                switchDetailFragment("Gas",view);
             }
         });
 
         btnHumidity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
+                switchDetailFragment("Humidity",view);
             }
         });
 
@@ -239,44 +239,12 @@ public class NavigationMainFragment extends Fragment {
 
     }
 
-  /*  private List<Sensor> getListSensor(String sensor)
+    private void switchDetailFragment(String sensorName, View view)
     {
-        SensorApi.sensorApi.getListSensorView().enqueue(new Callback<SensorView>() {
-            @Override
-            public void onResponse(Call<SensorView> call, Response<SensorView> response) {
-                sensorView = response.body();
-            }
-
-            @Override
-            public void onFailure(Call<SensorView> call, Throwable t) {
-                Log.d("DEBUG", "fail to list sensor view");
-            }
-        });
-
-        if(sensor == "gas")
-        {
-            return sensorView.getGas_sensor();
-        }
-        else if(sensor == "temperature")
-        {
-            return sensorView.getTemperature_sensor();
-        }
-        else if(sensor == "humidity")
-        {
-            return sensorView.getHumidity_sensor();
-        }
-        return null;
+        Bundle bundle = new Bundle();
+        bundle.putString("myString", sensorName);
+        Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment, bundle);
+      //  Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
     }
-
-    private ArrayList<Entry> convertSensorDataToEntries(String sensorName) {
-        List<Sensor> listSensor = getListSensor(sensorName);
-        ArrayList<Entry> entries = new ArrayList<>();
-        int i = 0;
-        for (Sensor sensor : listSensor) {
-            entries.add(new Entry(i, Float.parseFloat(sensor.getData())));
-            i++;
-        }
-        return entries;
-    }*/
 
 }
