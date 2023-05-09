@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 class DC(BaseModel):
     dc_document_ID = "DCDocumentID"
-    timestamp: str
     status: int
     
     class Config:
