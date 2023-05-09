@@ -55,15 +55,15 @@ public class NotificationFragment extends Fragment {
         rvListNotification.addItemDecoration(itemDecoration);
 
         listNotification = new ArrayList<>();
-    /*    mHandler = new Handler();
+        mHandler = new Handler();
         mRunnable = new Runnable() {
             @Override
             public void run() {
                 getListNotifications();
-                mHandler.postDelayed(mRunnable, 30000); // Gọi lại mỗi 5 giây
+                mHandler.postDelayed(mRunnable, 500000); // Gọi lại mỗi 5 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 30000); // Gọi đầu tiên sau 5 giây*/
+        mHandler.postDelayed(mRunnable, 500000); // Gọi đầu tiên sau 5 giây
 
         return view;
     }
@@ -74,9 +74,9 @@ public class NotificationFragment extends Fragment {
         getListNotifications();
     }
 
-    private void getListNotifications()
+    public void getListNotifications()
     {
-        Log.d("DEBUG", "show list notification");
+      //  Log.d("DEBUG", "show list notification");
         NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
             @Override
             public void onResponse(Call<Notification> call, Response<Notification> response) {
@@ -84,7 +84,7 @@ public class NotificationFragment extends Fragment {
                 listNotification.add(notification);
                 notificationAdapter = new NotificationAdapter(listNotification);
                 rvListNotification.setAdapter(notificationAdapter);
-                Log.d("DEBUG", "get notification detail success:" + response.body().toString());
+             //   Log.d("DEBUG", "get notification detail success:" + response.body().toString());
             }
 
             @Override
@@ -102,7 +102,7 @@ public class NotificationFragment extends Fragment {
                     listNotification.addAll(tempList);
                     NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
                     rvListNotification.setAdapter(notificationAdapter);
-                    Log.d("DEBUG", "get notification success:" + response.body().toString());
+                //    Log.d("DEBUG", "get notification success:" + response.body().toString());
                 } else {
                     Log.d("DEBUG", "get notification success: response body or info_details is null");
                 }

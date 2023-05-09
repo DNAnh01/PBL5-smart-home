@@ -70,16 +70,16 @@ public class NavigationMainFragment extends Fragment {
         btnGas = view.findViewById(R.id.btn_gas);
         btnHumidity = view.findViewById(R.id.btn_humidity);
 
-   /*     mHandler = new Handler();
+        mHandler = new Handler();
         mRunnable = new Runnable() {
             @Override
             public void run() {
                 load();
-                mHandler.postDelayed(mRunnable, 5000); // Gọi lại mỗi 10 giây
+                mHandler.postDelayed(mRunnable, 5000); // Gọi lại mỗi 5 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 5000); // Gọi đầu tiên sau 10 giây
-*/
+        mHandler.postDelayed(mRunnable, 5000); // Gọi đầu tiên sau 5 giây
+
         btnTemperature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,6 +113,7 @@ public class NavigationMainFragment extends Fragment {
                 updateDevice(b,"led");
             }
         });
+
         return view;
     }
 
@@ -215,8 +216,8 @@ public class NavigationMainFragment extends Fragment {
             DeviceApi.deviceApi.updateGate(deviceData).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    // loadDevice();
-                    Log.d("DEBUG", "success update gate ");
+                     loadDevice();
+                 //   Log.d("DEBUG", "success update gate ");
                 }
 
                 @Override
@@ -231,8 +232,8 @@ public class NavigationMainFragment extends Fragment {
             DeviceApi.deviceApi.updateLed(deviceData).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    // loadDevice();
-                    Log.d("DEBUG", "success update led ");
+                     loadDevice();
+                 //   Log.d("DEBUG", "success update led ");
                 }
 
                 @Override
@@ -250,7 +251,6 @@ public class NavigationMainFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("myString", sensorName);
         Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment, bundle);
-      //  Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
     }
 
     private void showWarming() {

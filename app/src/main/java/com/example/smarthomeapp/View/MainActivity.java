@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         mBottomNavigationView.getMenu().findItem(R.id.menu_notification).setChecked(true);
+                        NotificationFragment notificationFragment = (NotificationFragment) adapter.instantiateItem(mViewPager, position);
+                        if (notificationFragment != null) {
+                            notificationFragment.getListNotifications();
+                        }
                         break;
                 }
 
