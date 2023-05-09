@@ -42,7 +42,7 @@ class CameraService:
             notice_details = {"description": notice_details_current.description,
                             "timestamp": notice_details_current.timestamp,
                             "image_encoded_pred": notice_details_current.image_encoded_pred}
-            notice_details_info_update = deque(notice_details_view.info_details, maxlen=10)
+            notice_details_info_update = deque(notice_details_view.info_details, maxlen=5)
             notice_details_info_update.append(notice_details)
             notice_details_info_update = list(notice_details_info_update)
             notice_details_view_service.update_notice_details_view(notice_details_view_document_ID=
