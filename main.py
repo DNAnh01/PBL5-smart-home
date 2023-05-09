@@ -10,7 +10,8 @@ from routers import (camera_router,
                      sensors_router,
                      sensors_view_router,
                      gatehouse_router,
-                     led_router)
+                     led_router,
+                     dc_router)
 
 app = FastAPI()
 
@@ -37,3 +38,4 @@ app.include_router(sensors_router.router)
 app.include_router(sensors_view_router.router)
 app.include_router(gatehouse_router.router)
 app.include_router(led_router.router)
+app.include_router(dc_router.router)
