@@ -7,7 +7,6 @@ class DC(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "timestamp": "2023-04-09 12:34:56",
                 "status": 0 
             }
         }
