@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class Camera(BaseModel):
     camera_document_ID = "CameraDocumentID"
-    timestamp: str
+    timestamp: Optional[str] = None
     description: Optional[str] = None
     images_encoded: List[str]
 

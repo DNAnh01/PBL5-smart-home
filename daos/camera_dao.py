@@ -23,5 +23,7 @@ class CameraDao:
     def update(self, camera_document_ID: str, camera_update: Camera) -> Camera:
         data = camera_update.dict()
         doc_ref = db.collection(self.collection_name).document(camera_document_ID)
+        
+        
         doc_ref.update(data)
         return self.get(camera_document_ID)
