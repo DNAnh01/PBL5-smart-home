@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         mBottomNavigationView.getMenu().findItem(R.id.menu_notification).setChecked(true);
                         break;
                 }
+
             }
 
             @Override

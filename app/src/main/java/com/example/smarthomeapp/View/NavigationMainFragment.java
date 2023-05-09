@@ -1,9 +1,12 @@
 package com.example.smarthomeapp.View;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -12,13 +15,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.smarthomeapp.API.DCApi;
 import com.example.smarthomeapp.API.DeviceApi;
 import com.example.smarthomeapp.API.SensorApi;
+import com.example.smarthomeapp.Model.DC;
 import com.example.smarthomeapp.Model.Device;
 import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.Model.SensorDetail;
@@ -46,7 +52,7 @@ public class NavigationMainFragment extends Fragment {
     private Handler mHandler;
     private Runnable mRunnable;
 
-    private SensorView sensorView;
+    private int intWarming = 1, intGas = 0;
 
     private LinearLayout btnTemperature, btnGas, btnHumidity;
     @Override
@@ -55,27 +61,25 @@ public class NavigationMainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_navigation_main, container, false);
 
-
         tvGas = view.findViewById(R.id.tv_gas);
         tvHumidity = view.findViewById(R.id.tv_humidity);
         tvTemperature = view.findViewById(R.id.tv_temperature);
-
         swDoor = view.findViewById(R.id.sw_door);
         swLed = view.findViewById(R.id.sw_led);
+        btnTemperature = view.findViewById(R.id.btn_temperature);
+        btnGas = view.findViewById(R.id.btn_gas);
+        btnHumidity = view.findViewById(R.id.btn_humidity);
 
-        mHandler = new Handler();
+   /*     mHandler = new Handler();
         mRunnable = new Runnable() {
             @Override
             public void run() {
                 load();
-                mHandler.postDelayed(mRunnable, 10000); // Gọi lại mỗi 10 giây
+                mHandler.postDelayed(mRunnable, 5000); // Gọi lại mỗi 10 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 10000); // Gọi đầu tiên sau 10 giây
-
-        btnTemperature = view.findViewById(R.id.btn_temperature);
-        btnGas = view.findViewById(R.id.btn_gas);
-        btnHumidity = view.findViewById(R.id.btn_humidity);
+        mHandler.postDelayed(mRunnable, 5000); // Gọi đầu tiên sau 10 giây
+*/
         btnTemperature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +100,6 @@ public class NavigationMainFragment extends Fragment {
                 switchDetailFragment("Humidity",view);
             }
         });
-
 
         swDoor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -121,8 +124,10 @@ public class NavigationMainFragment extends Fragment {
 
     private void load()
     {
+        Log.d("DEBUG", "show main fragment navigation");
         loadSensor();
         loadDevice();
+      //  showWarming();
     }
     private void loadDevice()
     {
@@ -182,6 +187,7 @@ public class NavigationMainFragment extends Fragment {
                     tvGas.setText(sensor.getGas_sensor_data());
                     tvHumidity.setText(sensor.getHumidity_sensor_data());
                     tvTemperature.setText(sensor.getTemperature_sensor_data());
+                    intGas = Integer.parseInt(tvGas.getText().toString());
                 }
             }
 
@@ -246,5 +252,52 @@ public class NavigationMainFragment extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment, bundle);
       //  Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment);
     }
+
+    private void showWarming() {
+        if (intWarming == 1 &&  intGas == 1) {
+            AlertDialog.Builder mDialog = new AlertDialog.Builder(getContext());
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            View mView = inflater.inflate(R.layout.dialog_notification, null);
+            mDialog.setView(mView);
+
+            AlertDialog dialog = mDialog.create();
+            dialog.setCancelable(true);
+
+            AppCompatButton btnNo = mView.findViewById(R.id.btn_no);
+            AppCompatButton btnYes = mView.findViewById(R.id.btn_yes);
+
+            btnNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intWarming = 0;
+                    dialog.dismiss();
+                }
+            });
+
+            btnYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intWarming = 0;
+                    DC dc = new DC(1);
+                    DCApi.DCApi.updateDC(dc).enqueue(new Callback<DC>() {
+                        @Override
+                        public void onResponse(Call<DC> call, Response<DC> response) {
+                            Log.d("DEBUG", "Update DC success!");
+                        }
+
+                        @Override
+                        public void onFailure(Call<DC> call, Throwable t) {
+                            Log.d("DEBUG", "Update DC fail!" + t.getMessage());
+                        }
+                    });
+                    dialog.dismiss();
+                }
+            });
+
+            intWarming = 0;
+            dialog.show();
+        }
+    }
+
 
 }

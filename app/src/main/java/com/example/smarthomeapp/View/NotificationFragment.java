@@ -60,10 +60,10 @@ public class NotificationFragment extends Fragment {
             @Override
             public void run() {
                 getListNotifications();
-                mHandler.postDelayed(mRunnable, 200000); // Gọi lại mỗi 5 giây
+                mHandler.postDelayed(mRunnable, 30000); // Gọi lại mỗi 5 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 200000); // Gọi đầu tiên sau 5 giây*/
+        mHandler.postDelayed(mRunnable, 30000); // Gọi đầu tiên sau 5 giây*/
 
         return view;
     }
@@ -76,6 +76,7 @@ public class NotificationFragment extends Fragment {
 
     private void getListNotifications()
     {
+        Log.d("DEBUG", "show list notification");
         NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
             @Override
             public void onResponse(Call<Notification> call, Response<Notification> response) {
