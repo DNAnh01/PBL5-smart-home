@@ -56,8 +56,6 @@ async def send_json_to_android_app(ip: str, json_data: dict):
     except httpx.RequestError as exc:
         raise HTTPException(status_code=500, detail=f"Lỗi khi gửi dữ liệu tới app Android: {exc}")
 
-
-
 @router.put("/gatehouse/app_sent/update/{gatehouse_document_ID}", response_model=GateHouse, tags=["gatehouse"])
 async def update_gatehouse(gatehouse_document_ID: str, gatehouse_update: GateHouse = Body(...)) -> GateHouse:
     result = gatehouse_service.get_gatehouse(gatehouse_document_ID)

@@ -1,8 +1,8 @@
 from daos.camera_dao import CameraDao
 from schemas.camera_schema import Camera
 
-from services.gatehouse_service import GatehouseService
-from schemas.gatehouse_schema import GateHouse
+from services.devices_service import DevicesService
+from schemas.devices_schema import Devices
 
 from services.notice_details_service import NoticeDetailsService
 from schemas.notice_details_schema import NoticeDetails
@@ -14,7 +14,7 @@ from collections import deque
 from z_face_recognition.face_rec_encoded_img_MTCNN import face_rec_encoded_imgs
 
 camera_dao = CameraDao()
-gatehouse_service = GatehouseService()
+devices_service = DevicesService()
 notice_details_service = NoticeDetailsService()
 
 notice_details_view_service = NoticeDetailsViewService()
@@ -39,9 +39,11 @@ class CameraService:
             notice_details_document_ID="NoticeDetailsDocumentID")
         
         def handel_update_notice_details_view(notice_details_view, notice_details_current):
-            notice_details = {"description": notice_details_current.description,
-                            "timestamp": notice_details_current.timestamp,
-                            "image_encoded_pred": notice_details_current.image_encoded_pred}
+            notice_details = {
+                                "description": notice_details_current.description,
+                                "timestamp": notice_details_current.timestamp,
+                                "image_encoded_pred": notice_details_current.image_encoded_pred
+                            }
             notice_details_info_update = deque(notice_details_view.info_details, maxlen=5)
             notice_details_info_update.append(notice_details)
             notice_details_info_update = list(notice_details_info_update)
@@ -49,6 +51,14 @@ class CameraService:
                                                                 "NoticeDetailsViewDocumentID",
                                                                 notice_details_view_update=NoticeDetailsView(info_details=notice_details_info_update))
         
+        devices_current = devices_service.get_devices(devices_document_ID="DevicesDocumentID")
+        
+        
+        def handel_update_devices_gatehouse(devices_current, status):
+            devices_service.update_devices(devices_document_ID="DevicesDocumentID",
+                                           devices_update=Devices(gatehouse_status=status,
+                                                                  led_status=devices_current.led_status,
+                                                                  dc_status=devices_current.dc_status))
         # 1. pred encode imgs
         pred_encode_imgs = face_rec_encoded_imgs(camera_update.images_encoded)
         '''
@@ -69,10 +79,11 @@ class CameraService:
             if max_confidence > 75:
                 person_to_open = [k for k, v in recognized_people.items() if v == max_confidence][0]
                 # update gatehouse
-                gatehouse_service.update_gatehouse("GatehouseDocumentID",
-                                                   GateHouse(
-                                                                status=1,
-                                                                timestamp=camera_update.timestamp))
+                # devices_service.update_devices("DevicesDocumentID",
+                #  
+                #                                   Devices(gatehouse_status=1))
+
+                handel_update_devices_gatehouse(devices_current=devices_current, status=1)
                 # update notice details
                 notice_details_service.update_notice_details("NoticeDetailsDocumentID",
                                                              NoticeDetails(
@@ -84,12 +95,14 @@ class CameraService:
                 print(f"Opening gate for {person_to_open}")
             else:
                 # update gatehouse
-                gatehouse_service.update_gatehouse("GatehouseDocumentID",GateHouse(status=0,timestamp=camera_update.timestamp))
+                # devices_service.update_devices("DevicesDocumentID",Devices(gatehouse_status=0))
+                handel_update_devices_gatehouse(devices_current=devices_current, status=0)
                 # update notice details view
                 handel_update_notice_details_view(notice_details_view, notice_details_current)
                 print("Not enough confidence to open the gate")
         else:
-            gatehouse_service.update_gatehouse("GatehouseDocumentID",GateHouse(status=0,timestamp=camera_update.timestamp))
+            # devices_service.update_devices("DevicesDocumentID",Devices(gatehouse_status=0))
+            handel_update_devices_gatehouse(devices_current=devices_current, status=0)
             # update notice details view
             handel_update_notice_details_view(notice_details_view, notice_details_current)
             print("Unknown person detected")
