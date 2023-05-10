@@ -1,31 +1,45 @@
 package com.example.smarthomeapp.Model;
 
 public class Device {
-    private int status;
-    private String timestamp;
-
-    public Device(int status, String timestamp) {
-        this.status = status;
-        this.timestamp = timestamp;
-    }
-    public Device(int status)
+    /*
     {
-        this.status = status;
+  "gatehouse_status": 0,
+  "led_status": 1,
+  "dc_status": 0,
+  "devices_document_ID": "DevicesDocumentID"
+}
+     */
+    private int gatehouse_status;
+    private int led_status;
+    private int dc_status;
+
+    public Device(int gatehouse_status, int led_status, int dc_status) {
+        this.gatehouse_status = gatehouse_status;
+        this.led_status = led_status;
+        this.dc_status = dc_status;
     }
 
-    public int getStatus() {
-        return status;
+    public int getGatehouse_status() {
+        return gatehouse_status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setGatehouse_status(int gatehouse_status) {
+        this.gatehouse_status = gatehouse_status;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public int getLed_status() {
+        return led_status;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setLed_status(int led_status) {
+        this.led_status = led_status;
+    }
+
+    public int getDc_status() {
+        return dc_status;
+    }
+
+    public void setDc_status(int dc_status) {
+        this.dc_status = dc_status;
     }
 }

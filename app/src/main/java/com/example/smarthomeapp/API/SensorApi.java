@@ -18,8 +18,9 @@ public interface SensorApi {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     //https://pbl5-5jdn.onrender.com/sensors/get/SensorsDocumentID
     //https://pbl5-5jdn.onrender.com/sensors_view/get/SensorsViewDocumentID
+    //https://pbl5-5jdn.onrender.com/devices/get/DevicesDocumentID
     SensorApi sensorApi = new Retrofit.Builder()
-            .baseUrl("https://pbl5-9n8k.onrender.com/")
+            .baseUrl("https://pbl5-5jdn.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(SensorApi.class);

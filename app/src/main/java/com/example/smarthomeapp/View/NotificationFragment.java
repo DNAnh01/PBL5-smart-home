@@ -77,6 +77,7 @@ public class NotificationFragment extends Fragment {
     public void getListNotifications()
     {
       //  Log.d("DEBUG", "show list notification");
+        listNotification = new ArrayList<>();
         NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
             @Override
             public void onResponse(Call<Notification> call, Response<Notification> response) {

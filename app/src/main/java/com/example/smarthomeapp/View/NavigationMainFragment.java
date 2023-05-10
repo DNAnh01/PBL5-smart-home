@@ -1,7 +1,6 @@
 package com.example.smarthomeapp.View;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,29 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.example.smarthomeapp.API.DCApi;
 import com.example.smarthomeapp.API.DeviceApi;
 import com.example.smarthomeapp.API.SensorApi;
-import com.example.smarthomeapp.Model.DC;
 import com.example.smarthomeapp.Model.Device;
-import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.Model.SensorDetail;
-import com.example.smarthomeapp.Model.SensorView;
 import com.example.smarthomeapp.R;
-import com.github.mikephil.charting.data.Entry;
-
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -48,7 +34,7 @@ import retrofit2.Response;
 public class NavigationMainFragment extends Fragment {
 
     private TextView tvHumidity, tvGas, tvTemperature;
-    private Switch swDoor,swLed;
+    private Switch swDoor,swLed,swDC;
     private Handler mHandler;
     private Runnable mRunnable;
 
@@ -66,6 +52,7 @@ public class NavigationMainFragment extends Fragment {
         tvTemperature = view.findViewById(R.id.tv_temperature);
         swDoor = view.findViewById(R.id.sw_door);
         swLed = view.findViewById(R.id.sw_led);
+        swDC = view.findViewById(R.id.sw_dc);
         btnTemperature = view.findViewById(R.id.btn_temperature);
         btnGas = view.findViewById(R.id.btn_gas);
         btnHumidity = view.findViewById(R.id.btn_humidity);
@@ -104,13 +91,20 @@ public class NavigationMainFragment extends Fragment {
         swDoor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                updateDevice(b,"gate");
+                updateDevice();
             }
         });
         swLed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                updateDevice(b,"led");
+                updateDevice();
+            }
+        });
+
+        swDC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                updateDevice();
             }
         });
 
@@ -125,42 +119,18 @@ public class NavigationMainFragment extends Fragment {
 
     private void load()
     {
-        Log.d("DEBUG", "show main fragment navigation");
         loadSensor();
         loadDevice();
-      //  showWarming();
     }
     private void loadDevice()
     {
-        DeviceApi.deviceApi.getStatusGate().enqueue(new Callback<Device>() {
+        DeviceApi.deviceApi.getStatusAll().enqueue(new Callback<Device>() {
             @Override
             public void onResponse(Call<Device> call, Response<Device> response) {
                 Device device = response.body();
                 if(device != null)
                 {
-                    if(device.getStatus() == 0 )
-                    {
-                        swDoor.setChecked(false);
-                    }
-                    else
-                    {
-                        swDoor.setChecked(true);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Device> call, Throwable t) {
-                Log.d("DEBUG", "fail deive gate: " + t.getMessage());
-            }
-        });
-        DeviceApi.deviceApi.getStatusLed().enqueue(new Callback<Device>() {
-            @Override
-            public void onResponse(Call<Device> call, Response<Device> response) {
-                Device device = response.body();
-                if(device != null)
-                {
-                    if(device.getStatus() == 0 )
+                    if(device.getLed_status() == 0)
                     {
                         swLed.setChecked(false);
                     }
@@ -168,12 +138,30 @@ public class NavigationMainFragment extends Fragment {
                     {
                         swLed.setChecked(true);
                     }
+
+                    if(device.getGatehouse_status() == 0)
+                    {
+                        swDoor.setChecked(false);
+                    }
+                    else
+                    {
+                        swDoor.setChecked(true);
+                    }
+                    if(device.getDc_status() == 0)
+                    {
+                        swDC.setChecked(false);
+                    }
+                    else
+                    {
+                        swDC.setChecked(true);
+                    }
                 }
+
             }
 
             @Override
             public void onFailure(Call<Device> call, Throwable t) {
-                Log.d("DEBUG", "fail device led: " + t.getMessage());
+                Log.d("DEBUG", "Get device fail " + t.getMessage());
             }
         });
     }
@@ -199,49 +187,23 @@ public class NavigationMainFragment extends Fragment {
         });
     }
 
-    private void updateDevice(Boolean status, String thietbi)
+    private void updateDevice()
     {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        int gate = swDoor.isChecked() ? 1 : 0;
+        int dc = swDC.isChecked() ? 1 : 0;
+        int led = swLed.isChecked() ? 1 : 0;
+        Device device = new Device(gate,led,dc);
+        DeviceApi.deviceApi.updateAll(device).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                loadDevice();
+            }
 
-        String currentDate = dateFormat.format(calendar.getTime());
-        String currentTime = timeFormat.format(calendar.getTime());
-        String timeNow = currentDate + " " + currentTime;
-        int intStatus = status ? 1 : 0;
-       // Log.d("DEBUG", "new status gate: " + intStatus);
-        if(thietbi == "gate")
-        {
-            Device deviceData = new Device(intStatus, timeNow);
-            DeviceApi.deviceApi.updateGate(deviceData).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                     loadDevice();
-                 //   Log.d("DEBUG", "success update gate ");
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.d("DEBUG", "fail update gate: " + t.getMessage());
-                }
-            });
-        }
-        else if(thietbi == "led")
-        {
-            Device deviceData = new Device(intStatus);
-            DeviceApi.deviceApi.updateLed(deviceData).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                     loadDevice();
-                 //   Log.d("DEBUG", "success update led ");
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.d("DEBUG", "fail update led: " + t.getMessage());
-                }
-            });
-        }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("DEBUG", "fail update device: " + t.getMessage());
+            }
+        });
 
 
     }
@@ -253,7 +215,7 @@ public class NavigationMainFragment extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_navigationMainFragment_to_navigationDetailDiagramFragment, bundle);
     }
 
-    private void showWarming() {
+  /*  private void showWarming() {
         if (intWarming == 1 &&  intGas == 1) {
             AlertDialog.Builder mDialog = new AlertDialog.Builder(getContext());
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -297,7 +259,7 @@ public class NavigationMainFragment extends Fragment {
             intWarming = 0;
             dialog.show();
         }
-    }
+    }*/
 
 
 }

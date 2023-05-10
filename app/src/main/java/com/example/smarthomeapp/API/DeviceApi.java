@@ -20,7 +20,7 @@ public interface DeviceApi {
 
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     DeviceApi deviceApi = new Retrofit.Builder()
-            .baseUrl("https://pbl5-9n8k.onrender.com/")
+            .baseUrl("https://pbl5-5jdn.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(DeviceApi.class);
@@ -31,9 +31,15 @@ public interface DeviceApi {
     @GET("led/get/LedDocumentID")
     Call<Device> getStatusLed();
 
+    @GET("devices/get/DevicesDocumentID")
+    Call<Device> getStatusAll();
+
     @PUT("gatehouse/update/GatehouseDocumentID")
     Call<ResponseBody> updateGate(@Body Device device);
 
     @PUT("led/update/LedDocumentID")
     Call<ResponseBody> updateLed(@Body Device device);
+
+    @PUT("devices/update/DevicesDocumentID")
+    Call<ResponseBody> updateAll(@Body Device device);
 }

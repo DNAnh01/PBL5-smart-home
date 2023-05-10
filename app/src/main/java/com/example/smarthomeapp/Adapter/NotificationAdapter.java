@@ -39,7 +39,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             return;
         }
         holder.tvTimestamp.setText(notification.getTimestamp());
-        holder.tvInfo.setText(notification.getDescription() + " đã mở cửa!");
+        holder.tvInfo.setText(notification.getDescription());
         String encodedImage = notification.getImage_encoded_pred();
         if(encodedImage != null && !encodedImage.equals("img_encode_pred") && !encodedImage.equals("")) {
             byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);

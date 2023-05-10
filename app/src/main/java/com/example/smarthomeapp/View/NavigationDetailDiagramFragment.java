@@ -29,9 +29,14 @@ import com.example.smarthomeapp.Model.Sensor;
 import com.example.smarthomeapp.Model.SensorView;
 import com.example.smarthomeapp.R;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +55,7 @@ public class NavigationDetailDiagramFragment extends Fragment {
     private String sensorName;
 
     private TextView tvSensorName;
-    private String color, colorText;
+    private String color, colorText, colorCircle;
 
     private ImageView imgPic;
     Drawable drawable;
@@ -87,18 +92,21 @@ public class NavigationDetailDiagramFragment extends Fragment {
         {
             color = "#F1877F";
             colorText = "#F71505";
+            colorCircle = "#5FC4F1";
             drawable = getResources().getDrawable(R.drawable.temperature);
         }
         else if(sensorName == "Gas")
         {
             color = "#CEF8DF03";
             colorText = "#FF9800";
+            colorCircle = "#E8A4F3";
             drawable = getResources().getDrawable(R.drawable.flame);
         }
         else
         {
-            color = "#ABEBF3";
+            color = "#69BEE4";
             colorText = "#5FC4F1";
+            colorCircle = "#E8673E";
             drawable = getResources().getDrawable(R.drawable.humidity);
         }
         tvSensorName.setTextColor(Color.parseColor(colorText));
@@ -115,7 +123,8 @@ public class NavigationDetailDiagramFragment extends Fragment {
             @Override
             public void onChanged(List<Sensor> sensorList) {
                 if (sensorList != null) {
-                    drawChart(sensorList);
+                   // drawChart(sensorList);
+                    test(sensorList);
                     SensorViewAdapter adapter = new SensorViewAdapter(sensorList);
                     rvListSensor.setAdapter(adapter);
                 } else {
@@ -154,35 +163,53 @@ public class NavigationDetailDiagramFragment extends Fragment {
         return sensorListLiveData;
     }
 
-    private void drawChart(List<Sensor> listSensor)
-    {
+    private void test(List<Sensor> listSensor) {
         List<Entry> entries = new ArrayList<>();
+        List<String> dates = new ArrayList<>();
         if (listSensor != null) {
             for (int i = 0; i < listSensor.size(); i++) {
                 Sensor sensor = listSensor.get(i);
-                float x = (float)(i);
-                float y = Float.parseFloat(sensor.getData());
-                entries.add(new Entry(x, y));
+                int data = Integer.parseInt(sensor.getData());
+                String date = sensor.getTimestamp();
+                entries.add(new Entry(i, data));
+                dates.add(date);
             }
+
+            ValueFormatter xAxisValueFormatter = new IndexAxisValueFormatter(dates);
+
+            XAxis xAxis = chart.getXAxis();
+            xAxis.setValueFormatter(xAxisValueFormatter);
+            xAxis.setLabelRotationAngle(-75f);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setLabelCount(dates.size(), false);
+            xAxis.setTextSize(15); // Cài đặt cỡ chữ
+          //  xAxis.setTextColor(Color.parseColor(colorText));
+
             LineDataSet dataSet = new LineDataSet(entries, "Sensor Data");
             dataSet.setColor(Color.parseColor(color));
+            dataSet.setCircleColor(Color.parseColor(colorCircle));
             dataSet.setLineWidth(4f);
-            dataSet.setDrawCircles(false);  // Tắt hiển thị các điểm dữ liệu
-            dataSet.setDrawValues(false);   // Tắt hiển thị các giá trị trên đồ thị
-            dataSet.setValueTextSize(10);
+            dataSet.setValueTextColor(Color.parseColor(colorText));
+            dataSet.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return String.format("%.0f", value);
+                }
+            });
+            dataSet.setValueTextSize(15);
+            dataSet.setValueTextColor(Color.parseColor(colorCircle));
+
             LineData lineData = new LineData(dataSet);
-
+            chart.getXAxis().setAxisMinimum(0f);
+            chart.getXAxis().setAxisMaximum(entries.size());
             chart.setData(lineData);
-
-            chart.getXAxis().setDrawAxisLine(false);
-            chart.getXAxis().setDrawLabels(false);
-            chart.getAxisLeft().setDrawAxisLine(false);
-            chart.getAxisLeft().setDrawLabels(false);
+            chart.getAxisRight().setDrawLabels(false);
+            // chart.getAxisLeft().setDrawLabels(false);
 
             chart.invalidate();
         } else {
-            Log.d("DEBUG", "chart fail: list sensor null");
+        Log.d("DEBUG", "chart fail: list sensor null");
         }
-
     }
+
 }
