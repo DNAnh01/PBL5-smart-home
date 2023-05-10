@@ -4,6 +4,8 @@ from typing import Any, Callable
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi.openapi.utils import get_openapi
+
 from routers import (camera_router, 
                      notice_details_router,
                      notice_details_view_router,
@@ -11,7 +13,8 @@ from routers import (camera_router,
                      sensors_view_router,
                      gatehouse_router,
                      led_router,
-                     dc_router)
+                     dc_router,
+                     test_ws)
 
 app = FastAPI()
 
@@ -31,6 +34,9 @@ app.add_middleware(
 '''
     Routers
 '''
+
+
+
 app.include_router(camera_router.router)
 app.include_router(notice_details_router.router)
 app.include_router(notice_details_view_router.router)
@@ -39,3 +45,4 @@ app.include_router(sensors_view_router.router)
 app.include_router(gatehouse_router.router)
 app.include_router(led_router.router)
 app.include_router(dc_router.router)
+app.include_router(test_ws.router)
