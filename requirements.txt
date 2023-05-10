@@ -38,7 +38,9 @@ grpcio==1.54.0
 grpcio-status==1.54.0
 h11==0.14.0
 h5py==3.8.0
+httpcore==0.17.0
 httplib2==0.22.0
+httpx==0.24.0
 idna==3.4
 importlib-metadata==6.6.0
 ipykernel==6.15.0
