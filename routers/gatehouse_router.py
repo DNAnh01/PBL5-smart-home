@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Body, HTTPException, WebSocket
 from services.gatehouse_service import GatehouseService
 from schemas.gatehouse_schema import GateHouse
+from fastapi.encoders import jsonable_encoder
 import httpx
+
+
 
 
 router = APIRouter()
@@ -43,6 +46,7 @@ async def send_json_to_android_app(ip: str, json_data: dict):
     
     try:
         async with httpx.AsyncClient() as client:
+            json_data = jsonable_encoder(json_data)
             response = await client.post(url, json=json_data)
             
             if response.status_code == 200:
@@ -51,6 +55,8 @@ async def send_json_to_android_app(ip: str, json_data: dict):
                 raise HTTPException(status_code=response.status_code, detail="Gửi dữ liệu tới app Android không thành công.")
     except httpx.RequestError as exc:
         raise HTTPException(status_code=500, detail=f"Lỗi khi gửi dữ liệu tới app Android: {exc}")
+
+
 
 @router.put("/gatehouse/app_sent/update/{gatehouse_document_ID}", response_model=GateHouse, tags=["gatehouse"])
 async def update_gatehouse(gatehouse_document_ID: str, gatehouse_update: GateHouse = Body(...)) -> GateHouse:
@@ -60,23 +66,24 @@ async def update_gatehouse(gatehouse_document_ID: str, gatehouse_update: GateHou
     
     # Gửi dữ liệu cập nhật cho app Android có địa chỉ IP cụ thể
     target_ip = "192.168.1.8"  # Địa chỉ IP cần gửi dữ liệu
-    await send_json_to_android_app(target_ip, gatehouse_update)
+    await send_json_to_smart_home(target_ip, gatehouse_update)
     
     return gatehouse_service.update_gatehouse(gatehouse_document_ID, gatehouse_update)
 
-async def send_json_to_android_app(ip: str, json_data: dict):
+async def send_json_to_smart_home(ip: str, json_data: dict):
     url = f"http://{ip}/endpoint"  # Đường dẫn endpoint của app Android
     
     try:
         async with httpx.AsyncClient() as client:
+            json_data = jsonable_encoder(json_data)
             response = await client.post(url, json=json_data)
             
             if response.status_code == 200:
-                print("Dữ liệu đã được gửi thành công tới app Android.")
+                print("Dữ liệu đã được gửi thành công tới smart home.")
             else:
-                raise HTTPException(status_code=response.status_code, detail="Gửi dữ liệu tới app Android không thành công.")
+                raise HTTPException(status_code=response.status_code, detail="Gửi dữ liệu tới smart home không thành công.")
     except httpx.RequestError as exc:
-        raise HTTPException(status_code=500, detail=f"Lỗi khi gửi dữ liệu tới app Android: {exc}")
+        raise HTTPException(status_code=500, detail=f"Lỗi khi gửi dữ liệu tới smart home: {exc}")
 
 
 
