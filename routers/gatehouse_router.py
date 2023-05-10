@@ -44,7 +44,7 @@ async def update_gatehouse(websocket: WebSocket, gatehouse_document_ID: str, gat
     connected_clients[websocket.client.host] = websocket
 
     # Gửi dữ liệu cập nhật cho client app Android có địa chỉ IP cụ thể
-    target_ip = "192.168.0.1"  # Địa chỉ IP cần gửi dữ liệu
+    target_ip = "27.69.146.73"  # Địa chỉ IP cần gửi dữ liệu
     if target_ip in connected_clients:
         target_client = connected_clients[target_ip]
         await target_client.send_json(gatehouse_update.dict())
