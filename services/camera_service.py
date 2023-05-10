@@ -97,12 +97,24 @@ class CameraService:
                 # update gatehouse
                 # devices_service.update_devices("DevicesDocumentID",Devices(gatehouse_status=0))
                 handel_update_devices_gatehouse(devices_current=devices_current, status=0)
+                # update notice details
+                notice_details_service.update_notice_details("NoticeDetailsDocumentID",
+                                                             NoticeDetails(
+                                                                timestamp=camera_update.timestamp,
+                                                                description="Không mở cửa !!!",
+                                                                image_encoded_pred=pred_encode_imgs[0][1]))
                 # update notice details view
                 handel_update_notice_details_view(notice_details_view, notice_details_current)
                 print("Not enough confidence to open the gate")
         else:
             # devices_service.update_devices("DevicesDocumentID",Devices(gatehouse_status=0))
             handel_update_devices_gatehouse(devices_current=devices_current, status=0)
+            # update notice details
+            notice_details_service.update_notice_details("NoticeDetailsDocumentID",
+                                                             NoticeDetails(
+                                                                timestamp=camera_update.timestamp,
+                                                                description="Không mở cửa !!!",
+                                                                image_encoded_pred=pred_encode_imgs[0][1]))
             # update notice details view
             handel_update_notice_details_view(notice_details_view, notice_details_current)
             print("Unknown person detected")
