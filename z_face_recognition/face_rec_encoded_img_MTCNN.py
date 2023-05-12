@@ -11,6 +11,12 @@ from mtcnn import MTCNN
 
 
 # @tf.function(input_signature=[tf.TensorSpec(shape=[None], dtype=tf.string)])
+
+def show_img(rgb_img, text):
+    cv.imshow(text, cv.resize(cv.cvtColor(rgb_img, cv.COLOR_RGB2BGR), (800, 600)))
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
 def face_rec_encoded_imgs(encoded_imgs):
     result = []
     facenet = FaceNet()
@@ -31,9 +37,8 @@ def face_rec_encoded_imgs(encoded_imgs):
         img = cv.imdecode(img_array, cv.IMREAD_COLOR)
         rgb_img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
         # Hiển thị ảnh trước khi nhận diện khuôn mặt
-        cv.imshow("Before Face Recognition", cv.resize(rgb_img, (800, 600)))
-        cv.waitKey(0)
-        cv.destroyAllWindows()
+        show_img(rgb_img, "Before Face Recognition")
+
         faces = detector.detect_faces(rgb_img)
         face_detected = len(faces) > 0    
         if not face_detected:
@@ -82,9 +87,7 @@ def face_rec_encoded_imgs(encoded_imgs):
             facial_recognition_information.append(text)
             if img is not None and len(img.shape) > 0 and img.shape[0] > 0 and img.shape[1] > 0: 
                 # Hiển thị ảnh sau khi nhận diện khuôn mặt
-                cv.imshow("After Face Recognition", cv.resize(rgb_img, (800, 600)))
-                cv.waitKey(0)
-                cv.destroyAllWindows()
+                show_img(rgb_img, "After Face Recognition")
                 rgb_img = cv.cvtColor(rgb_img, cv.COLOR_BGR2RGB)
                 encoded_string = base64.b64encode(cv.imencode('.jpg', rgb_img)[1]).decode('utf-8')
             facial_recognition_information.append(encoded_string)

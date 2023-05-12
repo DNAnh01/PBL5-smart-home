@@ -3,6 +3,7 @@ from services.camera_service import CameraService
 from schemas.camera_schema import Camera
 
 import datetime
+import pytz
 
 
 router = APIRouter()
@@ -22,8 +23,7 @@ async def get_camera(camera_document_ID: str) -> Camera:
 @router.put("/camera/update/{camera_document_ID}", response_model=Camera, tags=["camera"])
 async def update_camera(camera_document_ID: str, camera_update: Camera = Body(...)) -> Camera:
     result = camera_service.get_camera(camera_document_ID)
-    
-    camera_update.timestamp = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+    camera_update.timestamp = datetime.datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')).strftime("%d-%m-%Y %H:%M:%S")
     if not result:
         raise HTTPException(status_code=404, detail="camera not found.")
     return camera_service.update_camera(camera_document_ID, camera_update)
