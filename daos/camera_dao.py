@@ -17,13 +17,14 @@ class CameraDao:
         doc_ref = db.collection(self.collection_name).document(camera_document_ID)
         doc = doc_ref.get()
         if doc != None:
+            # print("**doc.to_dict() ", doc.to_dict())
             return Camera(**doc.to_dict())
         return
 
     def update(self, camera_document_ID: str, camera_update: Camera) -> Camera:
         data = camera_update.dict()
+        # print("data ", data)
         doc_ref = db.collection(self.collection_name).document(camera_document_ID)
-        
         
         doc_ref.update(data)
         return self.get(camera_document_ID)

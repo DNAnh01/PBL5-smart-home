@@ -30,6 +30,10 @@ def face_rec_encoded_imgs(encoded_imgs):
         img_array = np.frombuffer(decoded_image, np.uint8)
         img = cv.imdecode(img_array, cv.IMREAD_COLOR)
         rgb_img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+        # Hiển thị ảnh trước khi nhận diện khuôn mặt
+        cv.imshow("Before Face Recognition", cv.resize(rgb_img, (800, 600)))
+        cv.waitKey(0)
+        cv.destroyAllWindows()
         faces = detector.detect_faces(rgb_img)
         face_detected = len(faces) > 0    
         if not face_detected:
@@ -77,6 +81,10 @@ def face_rec_encoded_imgs(encoded_imgs):
                 cv.putText(rgb_img, text, (text_x, text_y), font, font_scale, (0, 255, 0), thickness)
             facial_recognition_information.append(text)
             if img is not None and len(img.shape) > 0 and img.shape[0] > 0 and img.shape[1] > 0: 
+                # Hiển thị ảnh sau khi nhận diện khuôn mặt
+                cv.imshow("After Face Recognition", cv.resize(rgb_img, (800, 600)))
+                cv.waitKey(0)
+                cv.destroyAllWindows()
                 rgb_img = cv.cvtColor(rgb_img, cv.COLOR_BGR2RGB)
                 encoded_string = base64.b64encode(cv.imencode('.jpg', rgb_img)[1]).decode('utf-8')
             facial_recognition_information.append(encoded_string)
