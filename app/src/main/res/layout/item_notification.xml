@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/orange"
         android:textSize="20dp"
-        android:text="Thong bao"
+        android:text="Không có thông báo!"
         android:textStyle="bold"/>
 
     <ImageView

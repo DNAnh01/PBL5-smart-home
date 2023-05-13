@@ -15,6 +15,9 @@ import retrofit2.http.GET;
 public interface NotificationApi {
     //https://pbl5-5jdn.onrender.com/notice_details/get/NoticeDetailsDocumentID
     //https://pbl5-5jdn.onrender.com/notice_details_view/get/NoticeDetailsViewDocumentID
+
+    //https://pbl5-smart-home.onrender.com/docs
+    //https://pbl5-9n8k.onrender.com/docs
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     NotificationApi notificationApi = new Retrofit.Builder()
             .baseUrl("https://pbl5-5jdn.onrender.com/")

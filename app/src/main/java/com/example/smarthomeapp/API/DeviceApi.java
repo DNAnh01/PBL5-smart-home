@@ -18,6 +18,8 @@ public interface DeviceApi {
     //https://pbl5-5jdn.onrender.com/led/get/LedDocumentID
     //https://pbl5-5jdn.onrender.com/led/update/LedDocumentID
 
+    //https://pbl5-smart-home.onrender.com/docs
+    //https://pbl5-9n8k.onrender.com/docs
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
     DeviceApi deviceApi = new Retrofit.Builder()
             .baseUrl("https://pbl5-5jdn.onrender.com/")
@@ -25,20 +27,9 @@ public interface DeviceApi {
             .build()
             .create(DeviceApi.class);
 
-    @GET("gatehouse/get/GatehouseDocumentID")
-    Call<Device> getStatusGate();
-
-    @GET("led/get/LedDocumentID")
-    Call<Device> getStatusLed();
 
     @GET("devices/get/DevicesDocumentID")
     Call<Device> getStatusAll();
-
-    @PUT("gatehouse/update/GatehouseDocumentID")
-    Call<ResponseBody> updateGate(@Body Device device);
-
-    @PUT("led/update/LedDocumentID")
-    Call<ResponseBody> updateLed(@Body Device device);
 
     @PUT("devices/update/DevicesDocumentID")
     Call<ResponseBody> updateAll(@Body Device device);

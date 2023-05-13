@@ -60,10 +60,10 @@ public class NotificationFragment extends Fragment {
             @Override
             public void run() {
                 getListNotifications();
-                mHandler.postDelayed(mRunnable, 500000); // Gọi lại mỗi 5 giây
+                mHandler.postDelayed(mRunnable, 600000); // Gọi lại mỗi 5 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 500000); // Gọi đầu tiên sau 5 giây
+        mHandler.postDelayed(mRunnable, 600000); // Gọi đầu tiên sau 5 giây
 
         return view;
     }
