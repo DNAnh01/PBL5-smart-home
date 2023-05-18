@@ -18,9 +18,14 @@ const char* password = "xomtro55";
 //const char* ssid = "KEM";
 //const char* password = "20052002";
 
+IPAddress localIP(192, 168, 1, 10);  // Địa chỉ IP tùy chỉnh
+IPAddress gateway(192, 168, 1, 1);  // Địa chỉ gateway
+IPAddress subnet(255, 255, 255, 0); // Subnet mask
+AsyncWebServer server(80);
+
 String imageFilePath = "/image.jpg";
 String server_url = "http://127.0.0.1:8000/camera/get";
-String image_url = "http://192.168.1.5/capture";
+String image_url = "http://192.168.1.10/capture";
 
 void startCameraServer();
 
@@ -89,7 +94,7 @@ void setup() {
   s->set_vflip(s, 1);
   s->set_hmirror(s, 1);
 #endif
-
+  WiFi.config(localIP, gateway, subnet);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
