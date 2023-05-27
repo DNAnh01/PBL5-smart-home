@@ -11,6 +11,7 @@
 #define GAS 18          // cảm biến khí gas
 #define SERVO_PIN 21     // động cơ servo
 #define LED_PIN 22      // đèn 
+#define COI 23          // coi
 
 // Khai báo đối tượng cảm biến DHT11
 #define DHTTYPE DHT11  
@@ -38,6 +39,7 @@ int in3=35;
 
 void setup() {
   pinMode(LED_PIN,OUTPUT);
+  pinMode(COI, OUTPUT);
   Serial.begin(115200);
 
   // Kết nối đến mạng WiFi
@@ -80,7 +82,11 @@ void loop() {
     return;
   }
   int khigas =  abs(digitalRead(GAS)-1);
-
+  if (khigas == 1) {
+    digitalWrite(COI,HIGH);
+  } else {
+    digitalWrite(COI,LOW);
+  }
   // gửi sensor
   HTTPClient httpSensor;
   httpSensor.begin(serverurl_sensor);
