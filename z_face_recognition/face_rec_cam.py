@@ -31,7 +31,7 @@ while cap.isOpened():
         ypred = facenet.embeddings(img)
         face_prob = model.predict_proba(ypred)
         max_prob = np.max(face_prob)
-        if max_prob < 0.75:
+        if max_prob < 0.6:
             final_name = "unknown"
             text = "{}: {:.2f}%".format(final_name, max_prob*100)
         else:
@@ -41,7 +41,8 @@ while cap.isOpened():
         cv.rectangle(frame, (x,y), (x+w,y+h), (0,0,255), 3)
         cv.putText(frame, text, (x,y-30), cv.FONT_HERSHEY_SIMPLEX,
                 1, (0,255,0), 3)
-
+    # Thay đổi kích thước khung hình trước khi hiển thị
+    # frame = cv.resize(frame, (800, 500)) # Chỉnh kích thước khung hình tại đây
     cv.imshow("Face Recognition:", frame)
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
