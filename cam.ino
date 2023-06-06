@@ -6,7 +6,9 @@
 #include <WiFiClient.h>
 #include <FS.h> 
 #include <SPIFFS.h>
-#include <base64.h>
+#include <Base64.h>
+#include <NTPClient.h>
+
 
 #define CAMERA_MODEL_AI_THINKER // Has PSRAM
 //#define CAMERA_MODEL_TTGO_T_JOURNAL // No PSRAM
@@ -18,14 +20,9 @@ const char* password = "xomtro55";
 //const char* ssid = "KEM";
 //const char* password = "20052002";
 
-IPAddress localIP(192, 168, 1, 10);  // Địa chỉ IP tùy chỉnh
-IPAddress gateway(192, 168, 1, 1);  // Địa chỉ gateway
-IPAddress subnet(255, 255, 255, 0); // Subnet mask
-AsyncWebServer server(80);
-
-String imageFilePath = "/image.jpg";
-String server_url = "http://127.0.0.1:8000/camera/get";
-String image_url = "http://192.168.1.10/capture";
+String server_url = "https://pbl5-5jdn.onrender.com/camera/update/CameraDocumentID";
+String image_url = "http://192.168.1.13/capture";
+String encodedData;
 
 void startCameraServer();
 
@@ -88,13 +85,13 @@ void setup() {
     s->set_saturation(s, -2); // lower the saturation
   }
   // drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_QVGA);
+  s->set_framesize(s, FRAMESIZE_QQVGA);
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE) || defined(CAMERA_MODEL_M5STACK_ESP32CAM)
   s->set_vflip(s, 1);
   s->set_hmirror(s, 1);
 #endif
-  WiFi.config(localIP, gateway, subnet);
+
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -110,71 +107,64 @@ void setup() {
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
 
-   camera_fb_t *fb = esp_camera_fb_get();
+
+  camera_fb_t *fb = esp_camera_fb_get();
   if (!fb) {
     Serial.println("Camera capture failed");
     return;
   }
+  
   HTTPClient http;
-  http.begin(image_url); // Thay thế bằng URL của ảnh
+  // Gọi API lấy ảnh từ URL http://192.168.1.2/capture
+  http.begin(image_url);
+  // Gửi yêu cầu GET
   int httpCode = http.GET();
+
+  // Kiểm tra kết quả trả về
   if (httpCode == HTTP_CODE_OK) {
-    // Đọc dữ liệu ảnh
-    WiFiClient* stream = http.getStreamPtr();
-    File imageFile = SPIFFS.open(imageFilePath, "w"); // Mở file ảnh để ghi
-    while (stream->available()) {
-      imageFile.write(stream->read());
-    }
-    imageFile.close();
-    Serial.println("Đã lưu ảnh vào SPIFFS");
+    // Lấy dữ liệu từ response
+    String payload = http.getString();
+    
+    // Chuyển đổi dữ liệu thành mảng byte
+    const char* data = payload.c_str();
+    size_t len = payload.length();
+    uint8_t byteData[len];
+    memcpy(byteData, data, len);
+
+    // Mã hóa ảnh dưới dạng Base64
+    encodedData = base64::encode(byteData, len);
+    Serial.println("Ảnh đã được mã hóa dưới dạng Base64: ");
+    Serial.println(encodedData);
+  
   } else {
     Serial.println("Lỗi khi lấy ảnh từ URL");
-    http.end();
-    return;
   }
   http.end();
 
-  // Đọc dữ liệu từ file ảnh
-  File imageFile = SPIFFS.open(imageFilePath, "r");
-  if (!imageFilePath) {
-    Serial.println("Không thể mở file ảnh");
-    return;
+  HTTPClient httpCamera ;
+  httpCamera.begin(server_url);
+  httpCamera.addHeader("Content-Type", "application/json");
+
+  const size_t JSON_CAPACITY = 20 * 1024;
+  DynamicJsonDocument jsonDocument(JSON_CAPACITY);
+
+  jsonDocument["timestamp"] ="5:21:22";//timeClient.getFormattedTime()
+  JsonArray imagesArray = jsonDocument.createNestedArray("images_encoded");
+  imagesArray.add(encodedData);
+  // Serialize JSON document thành chuỗi JSON
+  String jsonStringCamera;
+  serializeJson(jsonDocument, jsonStringCamera);
+  Serial.println(jsonStringCamera);
+  int httpCodeCamera = httpCamera.PUT(jsonStringCamera);
+
+  if (httpCodeCamera == 200) {
+    Serial.println("Gửi ảnh thành công");
+  } else {
+    Serial.println("Gửi ảnh thất bại. Code: " + String(httpCodeCamera));
   }
-  size_t imageSize = imageFile.size();
-  uint8_t* imageData = (uint8_t*)malloc(imageSize);
-  if (imageData == NULL) {
-    Serial.println("Không đủ bộ nhớ");
-    imageFile.close();
-    return;
-  }
-  imageFile.read(imageData, imageSize);
-  imageFile.close();
-
-  // Mã hóa dữ liệu thành base64
-  String base64Image = base64::encode(imageData, imageSize);
-
-  // Tạo đối tượng JSON
-  DynamicJsonDocument jsonDoc(512);
-  JsonObject jsonRoot = jsonDoc.to<JsonObject>();
-
-  // Thêm dữ liệu vào đối tượng JSON
-  jsonRoot["image_base64"] = base64Image;
-
-  // Chuyển đối tượng JSON thành chuỗi JSON
-  String jsonString;
-  serializeJson(jsonRoot, jsonString);
-  Serial.println("Chuỗi JSON:");
-  Serial.println(jsonString);
-  // Gửi chuỗi JSON đến web server
-  HTTPClient httpPost;
-  httpPost.begin(server_url);
-  httpPost.addHeader("Content-Type", "application/json");
-  int httpResponseCode = httpPost.POST(jsonString);
-  http.end();
-  esp_camera_fb_return(fb);
+  httpCamera.end();
 }
 
 void loop() {
- 
-  delay(10000);
+
 }
