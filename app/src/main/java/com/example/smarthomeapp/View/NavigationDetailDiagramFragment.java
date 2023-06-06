@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -58,7 +60,13 @@ public class NavigationDetailDiagramFragment extends Fragment {
     private String color, colorText, colorCircle;
 
     private ImageView imgPic;
+
+    private Handler mHandler;
+    private Runnable mRunnable;
+
     Drawable drawable;
+
+    private boolean isViewCreated = false;
 
     private MutableLiveData<List<Sensor>> sensorListLiveData = new MutableLiveData<>();
     @Override
@@ -79,6 +87,15 @@ public class NavigationDetailDiagramFragment extends Fragment {
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         rvListSensor.addItemDecoration(itemDecoration);
 
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                init();
+                mHandler.postDelayed(mRunnable, 5000); // Gọi lại mỗi 5 giây
+            }
+        };
+        mHandler.postDelayed(mRunnable, 5000); // Gọi đầu tiên sau 5 giây
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,20 +135,36 @@ public class NavigationDetailDiagramFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvSensorName.setText(sensorName);
-        getListSensor().observe(getViewLifecycleOwner(), new Observer<List<Sensor>>() {
-            @Override
-            public void onChanged(List<Sensor> sensorList) {
-                if (sensorList != null) {
-                   // drawChart(sensorList);
-                    test(sensorList);
-                    SensorViewAdapter adapter = new SensorViewAdapter(sensorList);
-                    rvListSensor.setAdapter(adapter);
-                } else {
-                    Log.d("DEBUG", " sensorList null");
+        isViewCreated = true;
+        init();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Hủy bỏ các handler khi Fragment bị hủy
+        mHandler.removeCallbacks(mRunnable);
+    }
+
+    private void init()
+    {
+        if (isViewCreated) {
+            tvSensorName.setText(sensorName);
+            getListSensor().observe(getViewLifecycleOwner(), new Observer<List<Sensor>>() {
+                @Override
+                public void onChanged(List<Sensor> sensorList) {
+                    if (sensorList != null) {
+                        // drawChart(sensorList);
+                        drawChart(sensorList);
+                        SensorViewAdapter adapter = new SensorViewAdapter(sensorList);
+                        rvListSensor.setAdapter(adapter);
+                    } else {
+                        Log.d("DEBUG", " sensorList null");
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     private LiveData<List<Sensor>> getListSensor() {
@@ -163,7 +196,7 @@ public class NavigationDetailDiagramFragment extends Fragment {
         return sensorListLiveData;
     }
 
-    private void test(List<Sensor> listSensor) {
+    private void drawChart(List<Sensor> listSensor) {
         List<Entry> entries = new ArrayList<>();
         List<String> dates = new ArrayList<>();
         if (listSensor != null) {

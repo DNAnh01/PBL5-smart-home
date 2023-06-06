@@ -1,6 +1,7 @@
 package com.example.smarthomeapp.View;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,10 +11,13 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -38,14 +42,23 @@ public class NavigationMainFragment extends Fragment {
     private Handler mHandler;
     private Runnable mRunnable;
 
-    private int intWarming = 1, intGas = 0;
+    private Handler sensorHandler;
+    private Runnable sensorRunnable;
+    private Handler deviceHandler;
+    private Runnable deviceRunnable;
+
+    private static boolean isNotification = true;
+
+    private View view;
 
     private LinearLayout btnTemperature, btnGas, btnHumidity;
+
+    private Vibrator vibrator;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_navigation_main, container, false);
+        view =  inflater.inflate(R.layout.fragment_navigation_main, container, false);
 
         tvGas = view.findViewById(R.id.tv_gas);
         tvHumidity = view.findViewById(R.id.tv_humidity);
@@ -57,7 +70,11 @@ public class NavigationMainFragment extends Fragment {
         btnGas = view.findViewById(R.id.btn_gas);
         btnHumidity = view.findViewById(R.id.btn_humidity);
 
-        mHandler = new Handler();
+        vibrator = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
+
+        load();
+
+     /*   mHandler = new Handler();
         mRunnable = new Runnable() {
             @Override
             public void run() {
@@ -65,7 +82,32 @@ public class NavigationMainFragment extends Fragment {
                 mHandler.postDelayed(mRunnable, 5000); // Gọi lại mỗi 5 giây
             }
         };
-        mHandler.postDelayed(mRunnable, 5000); // Gọi đầu tiên sau 5 giây
+        mHandler.postDelayed(mRunnable, 5000); // Gọi đầu tiên sau 5 giây */
+
+        // Khởi tạo handler và runnable cho sensor
+        sensorHandler = new Handler();
+        sensorRunnable = new Runnable() {
+            @Override
+            public void run() {
+                loadSensor();
+                sensorHandler.postDelayed(this, 3000); // Gọi lại mỗi 3 giây
+            }
+        };
+
+        // Khởi tạo handler và runnable cho device
+        deviceHandler = new Handler();
+        deviceRunnable = new Runnable() {
+            @Override
+            public void run() {
+                loadDevice();
+                deviceHandler.postDelayed(this, 5000); // Gọi lại mỗi 5 giây
+            }
+        };
+
+        // Bắt đầu gọi lần đầu tiên sau 3 giây cho sensor và sau 5 giây cho device
+        sensorHandler.postDelayed(sensorRunnable, 3000);
+        deviceHandler.postDelayed(deviceRunnable, 5000);
+
 
         btnTemperature.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,57 +153,46 @@ public class NavigationMainFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        load();
-    }
 
     private void load()
     {
-        loadSensor();
         loadDevice();
+        loadSensor();
     }
-    private void loadDevice()
-    {
+    private void vibrate() {
+        if (vibrator.hasVibrator()) {
+            vibrator.vibrate(1000);
+        }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        vibrator.cancel();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        // Hủy bỏ các handler khi Fragment bị hủy
+        sensorHandler.removeCallbacks(sensorRunnable);
+        deviceHandler.removeCallbacks(deviceRunnable);
+    }
+    private void loadDevice() {
         DeviceApi.deviceApi.getStatusAll().enqueue(new Callback<Device>() {
             @Override
             public void onResponse(Call<Device> call, Response<Device> response) {
                 Device device = response.body();
-                if(device != null)
-                {
-                    if(device.getLed_status() == 0)
-                    {
-                        swLed.setChecked(false);
-                    }
-                    else
-                    {
-                        swLed.setChecked(true);
-                    }
-
-                    if(device.getGatehouse_status() == 0)
-                    {
-                        swDoor.setChecked(false);
-                    }
-                    else
-                    {
-                        swDoor.setChecked(true);
-                    }
-                    if(device.getDc_status() == 0)
-                    {
-                        swDC.setChecked(false);
-                    }
-                    else
-                    {
-                        swDC.setChecked(true);
-                    }
+                if (device != null) {
+                    swLed.setChecked(device.getLed_status() == 1);
+                    swDoor.setChecked(device.getGatehouse_status() == 1);
+                    swDC.setChecked(device.getDc_status() == 1);
                 }
-
             }
 
             @Override
             public void onFailure(Call<Device> call, Throwable t) {
-                Log.d("DEBUG", "Get device fail " + t.getMessage());
+                Log.d("DEBUG", "Get device failed: " + t.getMessage());
             }
         });
     }
@@ -176,7 +207,10 @@ public class NavigationMainFragment extends Fragment {
                     tvGas.setText(sensor.getGas_sensor_data());
                     tvHumidity.setText(sensor.getHumidity_sensor_data());
                     tvTemperature.setText(sensor.getTemperature_sensor_data());
-                    intGas = Integer.parseInt(tvGas.getText().toString());
+                    if(sensor.getGas_sensor_data().equals("1"))
+                    {
+                        vibrate();
+                    }
                 }
             }
 
@@ -205,7 +239,6 @@ public class NavigationMainFragment extends Fragment {
             }
         });
 
-
     }
 
     private void switchDetailFragment(String sensorName, View view)
@@ -216,7 +249,8 @@ public class NavigationMainFragment extends Fragment {
     }
 
   /*  private void showWarming() {
-        if (intWarming == 1 &&  intGas == 1) {
+        if (isNotification  && !swDC.isChecked() ) {
+            vibrate();
             AlertDialog.Builder mDialog = new AlertDialog.Builder(getContext());
             LayoutInflater inflater = LayoutInflater.from(getContext());
             View mView = inflater.inflate(R.layout.dialog_notification, null);
@@ -227,11 +261,19 @@ public class NavigationMainFragment extends Fragment {
 
             AppCompatButton btnNo = mView.findViewById(R.id.btn_no);
             AppCompatButton btnYes = mView.findViewById(R.id.btn_yes);
+            CheckBox checkBox = mView.findViewById(R.id.checkBox);
 
             btnNo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    intWarming = 0;
+                    dialog.dismiss();
+                }
+            });
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    isNotification = false;
                     dialog.dismiss();
                 }
             });
@@ -239,27 +281,29 @@ public class NavigationMainFragment extends Fragment {
             btnYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    intWarming = 0;
-                    DC dc = new DC(1);
-                    DCApi.DCApi.updateDC(dc).enqueue(new Callback<DC>() {
+                    int gate = swDoor.isChecked() ? 1 : 0;
+                    int led = swLed.isChecked() ? 1 : 0;
+                    Device device = new Device(gate,led,1);
+                    DeviceApi.deviceApi.updateAll(device).enqueue(new Callback<ResponseBody>() {
                         @Override
-                        public void onResponse(Call<DC> call, Response<DC> response) {
-                            Log.d("DEBUG", "Update DC success!");
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Log.d("DEBUG", "success update device: ");
                         }
 
                         @Override
-                        public void onFailure(Call<DC> call, Throwable t) {
-                            Log.d("DEBUG", "Update DC fail!" + t.getMessage());
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Log.d("DEBUG", "fail update device: " + t.getMessage());
                         }
                     });
                     dialog.dismiss();
                 }
             });
 
-            intWarming = 0;
             dialog.show();
         }
-    }*/
+    }
+
+   */
 
 
 }

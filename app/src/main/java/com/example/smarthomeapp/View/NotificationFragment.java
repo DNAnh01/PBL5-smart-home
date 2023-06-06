@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -47,6 +48,28 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
 
+        view.setOnTouchListener(new View.OnTouchListener() {
+            private float startY;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        float endY = event.getY();
+                        float deltaY = endY - startY;
+
+                        if (deltaY > 0) {
+                            getListNotifications();
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+
+
         rvListNotification = view.findViewById(R.id.rv_listNotification);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         rvListNotification.setLayoutManager(linearLayoutManager);
@@ -55,6 +78,9 @@ public class NotificationFragment extends Fragment {
         rvListNotification.addItemDecoration(itemDecoration);
 
         listNotification = new ArrayList<>();
+
+        getListNotifications();
+
         mHandler = new Handler();
         mRunnable = new Runnable() {
             @Override
@@ -68,15 +94,9 @@ public class NotificationFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getListNotifications();
-    }
 
     public void getListNotifications()
     {
-      //  Log.d("DEBUG", "show list notification");
         listNotification = new ArrayList<>();
         NotificationApi.notificationApi.getNotification().enqueue(new Callback<Notification>() {
             @Override
@@ -85,7 +105,6 @@ public class NotificationFragment extends Fragment {
                 listNotification.add(notification);
                 notificationAdapter = new NotificationAdapter(listNotification);
                 rvListNotification.setAdapter(notificationAdapter);
-             //   Log.d("DEBUG", "get notification detail success:" + response.body().toString());
             }
 
             @Override
@@ -103,7 +122,6 @@ public class NotificationFragment extends Fragment {
                     listNotification.addAll(tempList);
                     NotificationAdapter notificationAdapter = new NotificationAdapter(listNotification);
                     rvListNotification.setAdapter(notificationAdapter);
-                //    Log.d("DEBUG", "get notification success:" + response.body().toString());
                 } else {
                     Log.d("DEBUG", "get notification success: response body or info_details is null");
                 }
