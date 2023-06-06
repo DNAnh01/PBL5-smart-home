@@ -1,3 +1,12 @@
+
+
+"""
+
+CODE Ở ĐÂY CHỈ ĐỂ TEST FIREBASE STORAGE
+
+"""
+
+
 from database.connection import bucket
 
 import threading

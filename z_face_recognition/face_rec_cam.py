@@ -17,7 +17,7 @@ encoder.fit(Y)
 detector = cv.CascadeClassifier(current_path + "/haarcascade_frontalface_default.xml")
 model = pickle.load(open(current_path + "/svm_model_160x160.pkl", 'rb'))
 
-cap = cv.VideoCapture("C:/Users/dongu/OneDrive/Tài liệu/NguyenAnh.mp4")
+cap = cv.VideoCapture(0)
 # WHILE LOOP
 while cap.isOpened():
     _, frame = cap.read()
