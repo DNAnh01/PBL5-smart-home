@@ -90,7 +90,7 @@ public class NavigationMainFragment extends Fragment {
             @Override
             public void run() {
                 loadSensor();
-                sensorHandler.postDelayed(this, 3000); // Gọi lại mỗi 3 giây
+                sensorHandler.postDelayed(this, 2000); // Gọi lại mỗi 2 giây
             }
         };
 
@@ -105,7 +105,7 @@ public class NavigationMainFragment extends Fragment {
         };
 
         // Bắt đầu gọi lần đầu tiên sau 3 giây cho sensor và sau 5 giây cho device
-        sensorHandler.postDelayed(sensorRunnable, 3000);
+        sensorHandler.postDelayed(sensorRunnable, 2000);
         deviceHandler.postDelayed(deviceRunnable, 5000);
 
 
