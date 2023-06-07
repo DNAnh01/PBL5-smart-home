@@ -12,7 +12,5 @@
 
 <img src="./img_md/z4400735444563_ece371cbb9e789273951349071d2b2be.jpg" width="195" height="400">
 
-<h3> Giao diện thông báo khi xuất hiện khí gas </h3>
 
-<img src="./img_md/z4400735436232_6297f6932099e0bb8285690c88f14b2d.jpg" width="195" height="400">
 
